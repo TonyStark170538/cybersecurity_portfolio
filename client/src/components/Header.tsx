@@ -12,7 +12,6 @@ export default function Header() {
     { label: "Projects", href: "/projects" },
     { label: "Writeups", href: "/writeups" },
     { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
   ];
 
   return (
