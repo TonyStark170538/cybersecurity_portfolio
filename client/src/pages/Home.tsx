@@ -63,7 +63,7 @@ export default function Home() {
             <div className="space-y-8">
               <div className="space-y-4">
                 <p className="text-accent font-mono text-sm font-medium">
-                  Hello, I'm Ali
+                  Hello, I'm Toni
                 </p>
                 <h1 className="text-5xl md:text-6xl font-bold leading-tight">
                   I am an aspiring{" "}
