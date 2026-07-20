@@ -1,4 +1,5 @@
 import { Download } from "lucide-react";
+import { Link } from "wouter";
 import Layout from "@/components/Layout";
 
 /**
@@ -123,12 +124,11 @@ export default function About() {
             <p className="text-muted-foreground mb-6">
               I'm actively seeking internship and junior cybersecurity opportunities. Let's connect!
             </p>
-            <a
-              href="mailto:contact@example.com"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-md bg-accent text-accent-foreground font-medium hover:opacity-90 transition-opacity"
-            >
-              Get in Touch
-            </a>
+            <Link href="/contact">
+              <span className="inline-flex items-center gap-2 px-6 py-3 rounded-md bg-accent text-accent-foreground font-medium hover:opacity-90 transition-opacity cursor-pointer">
+                Get in Touch
+              </span>
+            </Link>
           </div>
         </div>
       </section>

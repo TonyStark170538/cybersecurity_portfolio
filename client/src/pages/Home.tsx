@@ -77,13 +77,12 @@ export default function Home() {
 
               {/* CTA Button */}
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <a
-                  href="mailto:contact@example.com"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md bg-accent text-accent-foreground font-medium hover:opacity-90 transition-opacity"
-                >
-                  Contact me
-                  <ArrowRight size={18} />
-                </a>
+                <Link href="/contact">
+                  <span className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md bg-accent text-accent-foreground font-medium hover:opacity-90 transition-opacity cursor-pointer">
+                    Contact me
+                    <ArrowRight size={18} />
+                  </span>
+                </Link>
                 <Link href="/projects">
                   <span className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md border border-border text-foreground font-medium hover:bg-secondary transition-colors cursor-pointer">
                     View Projects

@@ -50,7 +50,7 @@ export default function Footer() {
         {/* Bottom: Copyright */}
         <div className="border-t border-border mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">
-            © 2026 Ali. All rights reserved.
+            © 2026 Antonina Shcherbakova. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-xs text-muted-foreground">
             <a href="#" className="hover:text-accent transition-colors">

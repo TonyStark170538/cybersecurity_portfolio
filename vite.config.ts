@@ -202,7 +202,50 @@ function vitePluginStorageProxy(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()];
+function vitePluginContactApi(): Plugin {
+  return {
+    name: "contact-api",
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use("/api/contact", (req, res, next) => {
+        if (req.method !== "POST") {
+          return next();
+        }
+
+        let body = "";
+        req.on("data", (chunk) => {
+          body += chunk.toString();
+        });
+
+        req.on("end", async () => {
+          try {
+            const { getContactClientIp, processContactSubmission } =
+              await import("../server/contactHandler.ts");
+            const parsedBody = body ? JSON.parse(body) : {};
+            const clientIp = getContactClientIp(
+              req.headers["x-forwarded-for"] as string | undefined,
+              req.socket.remoteAddress
+            );
+            const result = processContactSubmission(parsedBody, clientIp);
+            const status = result.success ? 200 : 400;
+
+            res.writeHead(status, { "Content-Type": "application/json" });
+            res.end(JSON.stringify(result));
+          } catch {
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({
+                success: false,
+                message: "Unable to process your request.",
+              })
+            );
+          }
+        });
+      });
+    },
+  };
+}
+
+const plugins = [react(), tailwindcss(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy(), vitePluginContactApi()];
 
 export default defineConfig({
   plugins,

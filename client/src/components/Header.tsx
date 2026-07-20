@@ -41,19 +41,17 @@ export default function Header() {
 
         {/* Contact CTA */}
         <div className="flex items-center gap-3">
-          <a
-            href="mailto:contact@example.com"
-            className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-md bg-accent text-accent-foreground font-medium hover:opacity-90 transition-opacity text-sm"
-          >
-            <Mail size={16} />
-            <span>Contact</span>
-          </a>
-          <a
-            href="mailto:contact@example.com"
-            className="sm:hidden flex items-center justify-center w-10 h-10 rounded-md bg-accent text-accent-foreground hover:opacity-90 transition-opacity"
-          >
-            <Mail size={18} />
-          </a>
+          <Link href="/contact">
+            <span className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-md bg-accent text-accent-foreground font-medium hover:opacity-90 transition-opacity text-sm cursor-pointer">
+              <Mail size={16} />
+              <span>Contact</span>
+            </span>
+          </Link>
+          <Link href="/contact">
+            <span className="sm:hidden flex items-center justify-center w-10 h-10 rounded-md bg-accent text-accent-foreground hover:opacity-90 transition-opacity cursor-pointer">
+              <Mail size={18} />
+            </span>
+          </Link>
         </div>
       </div>
     </header>
