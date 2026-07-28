@@ -48,11 +48,11 @@ tags:[
 
 
 repoUrl:
-"https://github.com/YOUR_USERNAME/ai-terminal",
+"https://github.com/TonyStark170538/portfolio",
 
 
 demoUrl:
-"https://YOUR-DEMO.com",
+"https://portfolio-chi-navy-93.vercel.app",
 
 
 overview:
@@ -167,11 +167,11 @@ tags:[
 
 
 repoUrl:
-"https://github.com/YOUR_USERNAME/jarvis",
+"https://github.com/TonyStark170538/jarvis-platform",
 
 
 demoUrl:
-"https://YOUR-DEMO.com",
+"https://jarvis-platform-gamma.vercel.app",
 
 
 overview:
@@ -278,11 +278,11 @@ tags:[
 
 
 repoUrl:
-"https://github.com/YOUR_USERNAME/pink-panther",
+"https://github.com/TonyStark170538/pinkpanther",
 
 
 demoUrl:
-"https://YOUR-DEMO.com",
+"https://pinkpanther1.onrender.com/",
 
 
 overview:
