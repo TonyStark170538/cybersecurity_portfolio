@@ -1,205 +1,819 @@
 import { Link } from "wouter";
-import { ArrowRight, Github, Linkedin, Shield } from "lucide-react";
+import {
+  ArrowRight,
+  Github,
+  Linkedin,
+  Cloud,
+  Brain,
+  Code2,
+  Shield,
+  Container,
+  Cpu,
+  Database,
+} from "lucide-react";
+
 import Layout from "@/components/Layout";
 
-/**
- * Home page - hero section with positioning statement and project highlights
- * Design: Dark background, cyan accents, asymmetric layout
- * Features: Hero with CTA, proof row (social links), featured projects
- */
 export default function Home() {
-  const proofItems = [
+  const focusAreas = [
     {
-      label: "GitHub",
-      url: "https://github.com",
-      icon: Github,
-      description: "github.com/devsec-ali",
+      title: "Cloud Security",
+      icon: Cloud,
+      description:
+        "Building secure cloud-native applications while exploring identity, infrastructure security, and modern cloud practices.",
     },
     {
-      label: "LinkedIn",
-      url: "https://linkedin.com",
-      icon: Linkedin,
-      description: "linkedin.com/in/devsec-ali",
+      title: "AI Engineering",
+      icon: Brain,
+      description:
+        "Creating AI-powered applications, intelligent interfaces, and data-driven software experiences.",
     },
     {
-      label: "TryHackMe",
-      url: "https://tryhackme.com",
-      icon: Shield,
-      description: "tryhackme.com/p/devsec-ali",
+      title: "Software Engineering",
+      icon: Code2,
+      description:
+        "Developing modern full-stack applications with clean architecture, scalable systems, and strong UX.",
     },
   ];
 
-  const featuredProjects = [
+
+  const projects = [
     {
-      id: 1,
-      title: "Secure Chat Application",
-      description: "End-to-end encrypted messaging app with threat modeling",
-      tags: ["Node.js", "Encryption", "Security"],
+      title: "AI Portfolio Terminal",
+      badge: "Featured",
+      description:
+        "An AI-powered finance application combining data analysis, risk simulations, and intelligent interfaces.",
+      tags: [
+        "AI",
+        "Python",
+        "Data Engineering",
+        "React",
+      ],
       href: "/projects/1",
     },
     {
-      id: 2,
-      title: "Web Vulnerability Scanner",
-      description: "Automated security testing tool for XSS and SQL injection",
-      tags: ["Python", "Web Security", "Automation"],
+      title: "J.A.R.V.I.S. Cybersecurity Platform",
+      badge: "In Development",
+      description:
+        "A futuristic SOC platform focused on threat intelligence, security monitoring, incident response, and automation.",
+      tags: [
+        "Cybersecurity",
+        "React",
+        "TypeScript",
+        "Security Engineering",
+      ],
       href: "/projects/2",
     },
     {
-      id: 3,
-      title: "API Rate Limiter",
-      description: "Distributed rate limiting with security best practices",
-      tags: ["JavaScript", "Backend", "Performance"],
+      title: "Pink Panther",
+      badge: "UI / UX",
+      description:
+        "A premium commercial website focused on branding, user experience, and modern frontend development.",
+      tags: [
+        "Frontend",
+        "Design",
+        "React",
+        "Tailwind",
+      ],
       href: "/projects/3",
     },
   ];
 
+
+  const technologies = [
+    {
+      title: "Frontend",
+      items: ["React", "TypeScript", "Tailwind CSS"],
+      icon: Code2,
+    },
+    {
+      title: "Backend",
+      items: ["Node.js", "Express", "APIs"],
+      icon: Database,
+    },
+    {
+      title: "Cloud",
+      items: ["AWS", "Docker", "GitHub Actions"],
+      icon: Cloud,
+    },
+    {
+      title: "Security & AI",
+      items: [
+        "OWASP",
+        "Threat Modeling",
+        "Python",
+        "AI APIs",
+      ],
+      icon: Shield,
+    },
+  ];
+
+
+  const learning = [
+    {
+      name: "AWS Cloud",
+      icon: Cloud,
+    },
+    {
+      name: "Cloud Security",
+      icon: Shield,
+    },
+    {
+      name: "AI Engineering",
+      icon: Brain,
+    },
+    {
+      name: "Docker",
+      icon: Container,
+    },
+    {
+      name: "MLOps",
+      icon: Cpu,
+    },
+  ];
+
+
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="py-20 md:py-32 border-b border-border">
+
+      {/* HERO */}
+
+      <section className="py-24 border-b border-border">
+
         <div className="container">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Left: Text */}
+
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+
+
             <div className="space-y-8">
-              <div className="space-y-4">
-                <p className="text-accent font-mono text-sm font-medium">
-                  Hello, I'm Toni
+
+
+              <div className="space-y-5">
+
+
+                <p className="text-accent font-mono text-sm tracking-widest uppercase">
+                  Software Engineer • Cloud Security • AI
                 </p>
+
+
                 <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-                  I am an aspiring{" "}
-                  <span className="text-accent">cybersecurity</span> and{" "}
-                  <span className="text-accent">AI engineer</span>
+
+                  Building intelligent software for
+
+                  <span className="text-accent">
+                    {" "}cloud, AI, and secure applications
+                  </span>
+
                 </h1>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  Building secure, practical applications with JavaScript, Node.js, Git, and modern AI tools.
+
+
+                <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
+
+                  I'm Toni, a software engineering student passionate about
+                  cloud security, AI-powered applications, and modern web
+                  development.
+
+                  <br /><br />
+
+                  I enjoy building products that combine clean user
+                  experiences, scalable architecture, and security-first
+                  thinking.
+
                 </p>
+
+
               </div>
 
-              {/* CTA Button */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Link href="/contact">
-                  <span className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md bg-accent text-accent-foreground font-medium hover:opacity-90 transition-opacity cursor-pointer">
-                    Contact me
-                    <ArrowRight size={18} />
-                  </span>
-                </Link>
+
+
+              <div className="flex flex-wrap gap-4">
+
+
                 <Link href="/projects">
-                  <span className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md border border-border text-foreground font-medium hover:bg-secondary transition-colors cursor-pointer">
+
+                  <span className="
+                    inline-flex
+                    items-center
+                    gap-2
+                    px-6
+                    py-3
+                    rounded-md
+                    bg-accent
+                    text-accent-foreground
+                    font-medium
+                    cursor-pointer
+                    hover:opacity-90
+                    transition
+                  ">
+
                     View Projects
+
+                    <ArrowRight size={18}/>
+
                   </span>
+
                 </Link>
-              </div>
-            </div>
 
-            {/* Right: Visual Element */}
-            <div className="hidden md:flex items-center justify-center">
-              <div className="relative w-64 h-64">
-                {/* Hexagon shield background */}
-                <div className="absolute inset-0 border-2 border-accent/30 rounded-3xl transform rotate-45" />
-                <div className="absolute inset-4 border-2 border-accent/20 rounded-2xl" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Shield size={120} className="text-accent/40" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Proof Row - Social Links */}
-      <section className="py-16 border-b border-border">
-        <div className="container">
-          <p className="text-sm text-muted-foreground mb-8 font-mono">
-            Proof of work
-          </p>
-          <div className="grid md:grid-cols-3 gap-6">
-            {proofItems.map((item) => {
-              const Icon = item.icon;
-              return (
+
                 <a
-                  key={item.label}
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-4 p-4 rounded-lg border border-border hover:border-accent/50 hover:bg-secondary/50 transition-all"
+                  href="/cv.pdf"
+                  className="
+                    inline-flex
+                    items-center
+                    gap-2
+                    px-6
+                    py-3
+                    rounded-md
+                    border
+                    border-border
+                    hover:bg-secondary
+                    transition
+                  "
                 >
-                  <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center group-hover:text-accent transition-colors">
-                    <Icon size={24} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-foreground">{item.label}</p>
-                    <p className="text-sm text-muted-foreground truncate">
-                      {item.description}
-                    </p>
-                  </div>
-                  <ArrowRight
-                    size={18}
-                    className="text-muted-foreground group-hover:text-accent transition-colors flex-shrink-0"
-                  />
+
+                  Download CV
+
                 </a>
-              );
-            })}
+
+
+              </div>
+
+
+
+            </div>
+
+
+
+
+            {/* ENGINEERING DASHBOARD */}
+
+
+            <div className="hidden lg:flex justify-center">
+
+
+              <div className="
+                w-80
+                rounded-xl
+                border
+                border-border
+                bg-secondary/30
+                backdrop-blur
+                p-6
+              ">
+
+
+                <div className="flex items-center justify-between mb-6">
+
+                  <p className="font-mono text-sm text-accent">
+                    SYSTEM STATUS
+                  </p>
+
+                  <span className="h-3 w-3 rounded-full bg-accent"></span>
+
+                </div>
+
+
+
+                <div className="space-y-5">
+
+
+                  <Status
+                    label="Cloud"
+                    value="Learning"
+                    icon={Cloud}
+                  />
+
+                  <Status
+                    label="AI"
+                    value="Building"
+                    icon={Brain}
+                  />
+
+                  <Status
+                    label="Security"
+                    value="Active"
+                    icon={Shield}
+                  />
+
+                  <Status
+                    label="Projects"
+                    value="4"
+                    icon={Code2}
+                  />
+
+
+                </div>
+
+
+              </div>
+
+
+            </div>
+
+
           </div>
+
         </div>
+
       </section>
 
-      {/* Featured Projects */}
-      <section className="py-20">
+
+
+
+
+      {/* FOCUS AREAS */}
+
+
+      <section className="py-20 border-b border-border">
+
+
         <div className="container">
-          <div className="space-y-4 mb-12">
-            <p className="text-accent font-mono text-sm font-medium">
-              Featured Work
-            </p>
-            <h2 className="text-4xl font-bold">Selected Projects</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl">
-              A selection of my strongest projects showcasing security practices and technical depth.
-            </p>
-          </div>
+
+
+          <p className="text-accent font-mono text-sm mb-4">
+            What I Focus On
+          </p>
+
+
+          <h2 className="text-4xl font-bold mb-10">
+            Engineering Interests
+          </h2>
+
+
 
           <div className="grid md:grid-cols-3 gap-6">
-            {featuredProjects.map((project) => (
-              <Link key={project.id} href={project.href}>
-                <span className="group flex flex-col gap-4 p-6 rounded-lg border border-border hover:border-accent/50 hover:bg-secondary/50 transition-all h-full cursor-pointer">
-                  <div className="space-y-2">
-                    <h3 className="font-bold text-lg group-hover:text-accent transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {project.description}
-                    </p>
-                  </div>
 
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    {project.tags.map((tag) => (
+
+            {focusAreas.map((item)=>{
+
+
+              const Icon=item.icon;
+
+
+              return (
+
+                <div
+                  key={item.title}
+                  className="
+                  rounded-xl
+                  border
+                  border-border
+                  p-6
+                  hover:border-accent/50
+                  transition
+                  "
+                >
+
+                  <Icon
+                    className="text-accent mb-5"
+                    size={32}
+                  />
+
+
+                  <h3 className="text-xl font-semibold mb-3">
+
+                    {item.title}
+
+                  </h3>
+
+
+                  <p className="text-muted-foreground leading-relaxed">
+
+                    {item.description}
+
+                  </p>
+
+
+                </div>
+
+              );
+
+
+            })}
+
+
+          </div>
+
+
+        </div>
+
+
+      </section>
+
+
+
+
+
+      {/* PROJECTS */}
+
+
+      <section className="py-24">
+
+
+        <div className="container">
+
+
+          <p className="text-accent font-mono text-sm">
+            Featured Work
+          </p>
+
+
+          <h2 className="text-4xl font-bold mt-3 mb-10">
+            Selected Projects
+          </h2>
+
+
+
+          <div className="grid lg:grid-cols-3 gap-8">
+
+
+            {projects.map(project=>(
+
+
+              <Link href={project.href} key={project.title}>
+
+
+                <span className="
+                  group
+                  flex
+                  flex-col
+                  h-full
+                  rounded-xl
+                  border
+                  border-border
+                  p-6
+                  cursor-pointer
+                  hover:bg-secondary/40
+                  hover:border-accent/50
+                  transition
+                ">
+
+
+                  <span className="
+                    text-xs
+                    text-accent
+                    font-mono
+                    mb-4
+                  ">
+
+                    {project.badge}
+
+                  </span>
+
+
+
+                  <h3 className="
+                    text-xl
+                    font-semibold
+                    mb-4
+                    group-hover:text-accent
+                  ">
+
+                    {project.title}
+
+                  </h3>
+
+
+
+                  <p className="
+                    text-muted-foreground
+                    text-sm
+                    leading-relaxed
+                  ">
+
+                    {project.description}
+
+                  </p>
+
+
+
+                  <div className="flex flex-wrap gap-2 mt-6">
+
+
+                    {project.tags.map(tag=>(
+
                       <span
                         key={tag}
-                        className="px-2 py-1 text-xs rounded bg-secondary text-muted-foreground"
+                        className="
+                        text-xs
+                        px-3
+                        py-1
+                        rounded-md
+                        bg-secondary
+                        "
                       >
+
                         {tag}
+
                       </span>
+
                     ))}
+
+
                   </div>
 
-                  <div className="flex items-center gap-2 text-accent font-medium text-sm group-hover:gap-3 transition-all">
-                    Read case study
-                    <ArrowRight size={16} />
+
+
+                  <div className="
+                    mt-auto
+                    pt-8
+                    flex
+                    items-center
+                    gap-2
+                    text-accent
+                  ">
+
+                    View Project
+
+                    <ArrowRight size={16}/>
+
+
                   </div>
+
+
                 </span>
+
+
               </Link>
+
+
             ))}
+
+
           </div>
 
-          {/* View All Projects Link */}
-          <div className="mt-12 text-center">
-            <Link href="/projects">
-              <span className="inline-flex items-center gap-2 text-accent font-medium hover:gap-3 transition-all cursor-pointer">
-                View all projects
-                <ArrowRight size={18} />
-              </span>
-            </Link>
-          </div>
+
         </div>
+
+
       </section>
+
+
+
+
+
+
+      {/* TECHNOLOGY */}
+
+
+
+      <section className="py-20 border-t border-border">
+
+
+        <div className="container">
+
+
+          <h2 className="text-4xl font-bold mb-10">
+
+            Technology Stack
+
+          </h2>
+
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+
+            {technologies.map(item=>{
+
+
+              const Icon=item.icon;
+
+
+              return (
+
+                <div
+                  key={item.title}
+                  className="
+                  border
+                  border-border
+                  rounded-xl
+                  p-5
+                  "
+                >
+
+                  <Icon
+                    size={28}
+                    className="text-accent mb-4"
+                  />
+
+
+                  <h3 className="font-semibold mb-3">
+
+                    {item.title}
+
+                  </h3>
+
+
+                  {item.items.map(x=>(
+
+                    <p
+                      key={x}
+                      className="text-sm text-muted-foreground"
+                    >
+
+                      {x}
+
+                    </p>
+
+                  ))}
+
+
+                </div>
+
+              );
+
+
+            })}
+
+
+          </div>
+
+
+        </div>
+
+
+      </section>
+
+
+
+
+
+      {/* LEARNING */}
+
+
+      <section className="py-20">
+
+
+        <div className="container">
+
+
+          <p className="text-accent font-mono text-sm mb-5">
+            Currently Exploring
+          </p>
+
+
+          <div className="flex flex-wrap gap-4">
+
+
+            {learning.map(item=>{
+
+
+              const Icon=item.icon;
+
+
+              return (
+
+                <div
+                  key={item.name}
+                  className="
+                  flex
+                  items-center
+                  gap-3
+                  border
+                  border-border
+                  rounded-lg
+                  px-5
+                  py-3
+                  "
+                >
+
+                  <Icon size={20}/>
+
+                  {item.name}
+
+
+                </div>
+
+              );
+
+
+            })}
+
+
+          </div>
+
+
+        </div>
+
+
+      </section>
+
+
+
+
+
+
+      {/* CONNECT CTA */}
+
+
+      <section className="py-24 border-t border-border">
+
+
+        <div className="container text-center">
+
+
+          <h2 className="text-4xl font-bold mb-5">
+
+            Interested in building secure software?
+
+          </h2>
+
+
+          <p className="text-muted-foreground mb-8">
+
+            Let's connect and build something together.
+
+          </p>
+
+
+
+          <div className="flex justify-center gap-5">
+
+
+            <a
+              href="https://github.com/YOUR_GITHUB"
+              target="_blank"
+              className="text-accent"
+            >
+
+              <Github/>
+
+            </a>
+
+
+            <a
+              href="https://linkedin.com/in/YOUR_LINKEDIN"
+              target="_blank"
+              className="text-accent"
+            >
+
+              <Linkedin/>
+
+            </a>
+
+
+          </div>
+
+
+        </div>
+
+
+      </section>
+
+
     </Layout>
   );
+}
+
+
+
+
+
+function Status({
+  label,
+  value,
+  icon: Icon,
+}:{
+  label:string;
+  value:string;
+  icon:any;
+}){
+
+
+return (
+
+<div className="
+flex
+items-center
+justify-between
+border-b
+border-border
+pb-3
+">
+
+
+<div className="flex items-center gap-3">
+
+<Icon size={20}/>
+
+<span>
+{label}
+</span>
+
+</div>
+
+
+<span className="text-accent font-mono text-sm">
+
+{value}
+
+</span>
+
+
+</div>
+
+);
+
+
 }
