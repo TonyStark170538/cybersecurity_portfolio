@@ -3,135 +3,413 @@ import { Link } from "wouter";
 import Layout from "@/components/Layout";
 
 /**
- * About page - security philosophy and background
- * Design: Personal narrative focused on security mindset, not generic bio
+ * About page
+ *
+ * Security-focused personal introduction.
+ * Explains engineering philosophy, background,
+ * and approach to building secure systems.
  */
+
 export default function About() {
   return (
     <Layout>
+
       {/* Header */}
       <section className="py-16 border-b border-border">
+
         <div className="container space-y-4">
-          <p className="text-accent font-mono text-sm font-medium">About</p>
-          <h1 className="text-5xl font-bold">My Security Philosophy</h1>
+
+          <p className="text-accent font-mono text-sm font-medium">
+            About
+          </p>
+
+          <h1 className="text-5xl font-bold">
+            Security-Minded Software Engineer
+          </h1>
+
+          <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed">
+            I build software with security, architecture, and maintainability
+            in mind. My focus is creating applications that are not only
+            functional, but designed with the mindset of understanding
+            threats and reducing risk.
+          </p>
+
         </div>
+
       </section>
+
+
 
       {/* Content */}
       <section className="py-20">
-        <div className="container max-w-3xl space-y-12">
+
+        <div className="container max-w-4xl space-y-16">
+
+
+
           {/* Philosophy */}
-          <div className="space-y-6">
-            <h2 className="text-3xl font-bold">Security by Design, Not by Accident</h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              I believe that security isn't a feature to be bolted on at the end—it's a foundational principle that should guide every decision in software development. From architecture to code review, security considerations should be woven into the fabric of how we build.
-            </p>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              This philosophy stems from my understanding that vulnerabilities aren't just technical failures; they're often the result of incomplete threat modeling, unclear assumptions, or shortcuts taken under pressure. By thinking like an attacker early and often, we can build systems that are resilient to both known and unknown threats.
-            </p>
-          </div>
 
-          {/* Background */}
-          <div className="space-y-6 border-t border-border pt-12">
-            <h2 className="text-3xl font-bold">My Journey</h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              My interest in cybersecurity started with curiosity about how systems work and how they break. I began exploring CTF challenges on platforms like TryHackMe and HackTheBox, which taught me the fundamentals of penetration testing, vulnerability analysis, and exploit development.
-            </p>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              As I progressed, I realized that the most impactful security work happens on the defensive side—building systems that are secure from the ground up. This led me to focus on secure software development, threat modeling, and secure architecture design. I've since applied these principles to real-world projects, always keeping the attacker's perspective in mind.
-            </p>
-          </div>
+          <section className="space-y-6">
 
-          {/* Approach */}
-          <div className="space-y-6 border-t border-border pt-12">
-            <h2 className="text-3xl font-bold">My Approach</h2>
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-bold text-foreground mb-2">Threat Modeling First</h3>
+            <h2 className="text-3xl font-bold">
+              Security Starts With Architecture
+            </h2>
+
+
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              I believe security should be considered from the beginning of
+              the development process, not added after problems appear.
+              Good security starts with understanding the system, identifying
+              possible threats, and making thoughtful engineering decisions.
+            </p>
+
+
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              My approach combines software development with security thinking:
+              understanding how systems are built, how they can fail, and how
+              they can be improved through better design.
+            </p>
+
+
+          </section>
+
+
+
+
+          {/* Journey */}
+
+          <section className="space-y-6 border-t border-border pt-12">
+
+            <h2 className="text-3xl font-bold">
+              My Journey
+            </h2>
+
+
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              My interest in cybersecurity started from curiosity about how
+              technology works and how attackers find weaknesses in systems.
+              Exploring security concepts, vulnerability research, and
+              practical challenges helped me understand both offensive and
+              defensive security.
+            </p>
+
+
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Over time, my focus moved toward secure software engineering:
+              building applications, designing better architectures, and
+              applying cybersecurity principles throughout the development
+              lifecycle.
+            </p>
+
+
+          </section>
+
+
+
+
+
+          {/* Engineering mindset */}
+
+          <section className="space-y-6 border-t border-border pt-12">
+
+            <h2 className="text-3xl font-bold">
+              Engineering Mindset
+            </h2>
+
+
+            <div className="grid md:grid-cols-2 gap-6">
+
+
+              <div className="rounded-xl border border-border p-6">
+
+                <h3 className="font-bold text-accent mb-3">
+                  Threat Modeling First
+                </h3>
+
                 <p className="text-muted-foreground">
-                  Before writing a single line of code, I identify potential threats and design mitigations. This prevents security from being an afterthought.
+                  I analyze possible risks before implementation and design
+                  systems with security considerations from the beginning.
                 </p>
+
               </div>
-              <div>
-                <h3 className="font-bold text-foreground mb-2">Defense in Depth</h3>
+
+
+
+              <div className="rounded-xl border border-border p-6">
+
+                <h3 className="font-bold text-accent mb-3">
+                  Secure Architecture
+                </h3>
+
                 <p className="text-muted-foreground">
-                  I implement multiple layers of security controls. If one fails, others are in place to catch the attack.
+                  I focus on creating clear structures, reusable components,
+                  and maintainable systems.
                 </p>
+
               </div>
-              <div>
-                <h3 className="font-bold text-foreground mb-2">Practical Over Perfect</h3>
+
+
+
+              <div className="rounded-xl border border-border p-6">
+
+                <h3 className="font-bold text-accent mb-3">
+                  Defense in Depth
+                </h3>
+
                 <p className="text-muted-foreground">
-                  Security is a balance between protection and usability. I aim for practical, maintainable solutions that don't sacrifice user experience.
+                  Security should not depend on one protection layer.
+                  Multiple controls create stronger systems.
                 </p>
+
               </div>
-              <div>
-                <h3 className="font-bold text-foreground mb-2">Continuous Learning</h3>
+
+
+
+              <div className="rounded-xl border border-border p-6">
+
+                <h3 className="font-bold text-accent mb-3">
+                  Continuous Improvement
+                </h3>
+
                 <p className="text-muted-foreground">
-                  The threat landscape evolves constantly. I stay updated on new vulnerabilities, attack techniques, and best practices.
+                  Technology changes constantly, so improving skills and
+                  understanding new threats is part of the process.
                 </p>
+
               </div>
+
+
             </div>
-          </div>
+
+
+          </section>
+
+
+
+
+
+
+          {/* Projects connection */}
+
+          <section className="space-y-6 border-t border-border pt-12">
+
+
+            <h2 className="text-3xl font-bold">
+              Building Real Projects
+            </h2>
+
+
+            <p className="text-lg text-muted-foreground leading-relaxed">
+
+              My projects are built as practical demonstrations of engineering
+              decisions. From cybersecurity dashboards to AI-driven platforms,
+              each project focuses on architecture, usability, and explaining
+              why specific technical choices were made.
+
+            </p>
+
+
+          </section>
+
+
+
+
+
 
           {/* Skills */}
-          <div className="space-y-6 border-t border-border pt-12">
-            <h2 className="text-3xl font-bold">Skills & Expertise</h2>
+
+          <section className="space-y-6 border-t border-border pt-12">
+
+
+            <h2 className="text-3xl font-bold">
+              Skills & Technologies
+            </h2>
+
+
+
             <div className="grid md:grid-cols-2 gap-8">
+
+
               <div>
-                <h3 className="font-bold text-accent mb-3">Languages & Frameworks</h3>
+
+                <h3 className="font-bold text-accent mb-3">
+                  Software Engineering
+                </h3>
+
+
                 <ul className="space-y-2 text-muted-foreground">
-                  <li>• JavaScript / Node.js</li>
+
+                  <li>• React / TypeScript</li>
+                  <li>• Node.js</li>
                   <li>• Python</li>
-                  <li>• React</li>
-                  <li>• Express.js</li>
+                  <li>• REST APIs</li>
                   <li>• Git & Version Control</li>
+
                 </ul>
+
+
               </div>
+
+
+
+
               <div>
-                <h3 className="font-bold text-accent mb-3">Security Expertise</h3>
+
+                <h3 className="font-bold text-accent mb-3">
+                  Cybersecurity
+                </h3>
+
+
                 <ul className="space-y-2 text-muted-foreground">
-                  <li>• Threat Modeling (STRIDE)</li>
-                  <li>• Cryptography & Encryption</li>
-                  <li>• Authentication & Authorization</li>
-                  <li>• Web Application Security</li>
+
+                  <li>• Threat Modeling</li>
                   <li>• OWASP Top 10</li>
+                  <li>• Authentication Security</li>
+                  <li>• Secure Architecture</li>
+                  <li>• Security Testing</li>
+
                 </ul>
+
+
               </div>
+
+
             </div>
-          </div>
+
+
+          </section>
+
+
+
+
+
+
 
           {/* Resume */}
-          <div className="border-t border-border pt-12">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-6 rounded-lg bg-secondary border border-border">
+
+          <section className="border-t border-border pt-12">
+
+
+            <div className="
+              flex
+              flex-col
+              sm:flex-row
+              items-start
+              sm:items-center
+              justify-between
+              gap-6
+              p-6
+              rounded-xl
+              bg-secondary
+              border
+              border-border
+            ">
+
+
               <div>
-                <h3 className="font-bold text-foreground mb-1">Want to learn more?</h3>
+
+                <h3 className="font-bold mb-2">
+                  Professional Background
+                </h3>
+
+
                 <p className="text-sm text-muted-foreground">
-                  Download my resume for a detailed overview of my experience and qualifications.
+                  Download my resume for more details about my experience,
+                  projects, and technical skills.
                 </p>
+
+
               </div>
+
+
+
               <a
                 href="/resume.pdf"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-accent text-accent-foreground font-medium hover:opacity-90 transition-opacity flex-shrink-0 text-sm"
+                className="
+                inline-flex
+                items-center
+                gap-2
+                px-5
+                py-3
+                rounded-md
+                bg-accent
+                text-accent-foreground
+                font-medium
+                hover:opacity-90
+                transition
+                "
               >
-                <Download size={16} />
+
+                <Download size={16}/>
+
                 Download Resume
+
               </a>
+
+
             </div>
-          </div>
+
+
+          </section>
+
+
+
+
+
 
           {/* CTA */}
-          <div className="border-t border-border pt-12 text-center">
+
+          <section className="
+            border-t
+            border-border
+            pt-12
+            text-center
+          ">
+
+
             <p className="text-muted-foreground mb-6">
-              I'm actively seeking internship and junior cybersecurity opportunities. Let's connect!
+
+              Interested in secure software development and cybersecurity
+              engineering? Let's connect.
+
             </p>
+
+
+
             <Link href="/contact">
-              <span className="inline-flex items-center gap-2 px-6 py-3 rounded-md bg-accent text-accent-foreground font-medium hover:opacity-90 transition-opacity cursor-pointer">
+
+              <span
+                className="
+                inline-flex
+                px-6
+                py-3
+                rounded-md
+                bg-accent
+                text-accent-foreground
+                font-medium
+                cursor-pointer
+                hover:opacity-90
+                transition
+                "
+              >
+
                 Get in Touch
+
               </span>
+
+
             </Link>
-          </div>
+
+
+          </section>
+
+
+
         </div>
+
       </section>
+
+
     </Layout>
   );
 }

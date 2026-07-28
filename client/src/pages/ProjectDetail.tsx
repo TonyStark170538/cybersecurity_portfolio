@@ -1,5 +1,12 @@
 import { useRoute } from "wouter";
-import { Github, ExternalLink, ArrowLeft } from "lucide-react";
+import {
+  Github,
+  ExternalLink,
+  ArrowLeft,
+  Layers,
+  CheckCircle,
+  Lightbulb,
+} from "lucide-react";
 import { Link } from "wouter";
 import Layout from "@/components/Layout";
 
@@ -19,289 +26,341 @@ export default function ProjectDetail() {
 
   if (!match) return null;
 
-  const projects = {     "1": {
-      id: 1,
-      title: "J.A.R.V.I.S. Cybersecurity Platform",
-      subtitle:
-        "A futuristic cybersecurity command center for monitoring, threat analysis, and incident response",
+  const projects = {
 
-      tags: [
-        "React",
-        "TypeScript",
-        "Tailwind CSS",
-        "Cybersecurity",
-        "Dashboard",
-      ],
+"1": {
 
-      repoUrl: "https://github.com/YOUR_USERNAME/jarvis-platform",
-      demoUrl: "https://YOUR-DEMO-LINK.com",
+id:1,
 
-      problem: `
-Security teams often work with multiple disconnected tools to monitor systems, investigate incidents, and understand threats.
+title:"AI Portfolio Terminal",
 
-Switching between different platforms can slow down investigations and make it difficult to see the complete security picture.
+subtitle:
+"An AI-powered financial intelligence platform combining data analysis, risk simulation, and intelligent software design.",
 
-The goal of this project was to design a unified cybersecurity dashboard that combines important security workflows into one clear interface.
 
-Instead of creating only a visual dashboard, I wanted to explore how security professionals interact with information during monitoring and incident response.
-      `,
+tags:[
+"React",
+"TypeScript",
+"Python",
+"AI",
+"Data Engineering"
+],
 
-      threatModel: `
-This project focuses on improving security visibility and helping analysts identify important events faster.
 
-The main security concepts represented in the platform include:
+repoUrl:
+"https://github.com/YOUR_USERNAME/ai-terminal",
 
-• Threat monitoring
-• Incident investigation
-• Asset visibility
-• Risk assessment
-• Attack simulation workflows
 
-The current version uses simulated data. The architecture is designed for future integration with real security tools and telemetry sources.
-      `,
+demoUrl:
+"https://YOUR-DEMO.com",
 
-      implementation: `
-I built the platform using React, TypeScript, and Tailwind CSS.
 
-The application includes eight main modules:
+overview:
+`
+AI Portfolio Terminal is an application exploring how artificial intelligence
+can improve financial analysis and decision making.
 
-• Dashboard
-• Attack Lab
-• Monitoring
-• Incidents
-• Assets
-• Reports
-• Threat Intelligence
-• Settings
+The project combines frontend engineering, data processing,
+and AI workflows into one interactive experience.
 
-The interface uses a cybersecurity-focused design system with:
-
-• Dark theme
-• Neon cyan accents
-• Glassmorphism panels
-• Responsive layouts
-• Reusable components
-• Smooth animations
-
-The goal was to create an interface that feels like a professional Security Operations Center while maintaining usability and clear information hierarchy.
-      `,
-
-      securityDecisions: `
-1. Designed the interface around security workflows instead of generic dashboard components.
-
-2. Used TypeScript to improve reliability and maintainability.
-
-3. Created reusable React components to keep the application scalable.
-
-4. Focused on information hierarchy to reduce cognitive overload.
-
-5. Designed the frontend architecture so future APIs and security data sources can be integrated.
-
-6. Planned future connections with security tools such as Suricata, Zeek, and Wazuh.
-      `,
-
-      improvements: `
-Future improvements:
-
-• Connect real system telemetry
-• Add backend API services
-• Integrate security monitoring tools
-• Add real-time event streaming
-• Implement MITRE ATT&CK mappings
-• Add automated response actions
-• Replace mock data with live security events
-      `,
-
-      code: `
-// Example: Security dashboard modules
-
-const modules = [
-  "Dashboard",
-  "Attack Lab",
-  "Monitoring",
-  "Incidents",
-  "Assets",
-  "Reports",
-  "Threat Intelligence"
-];
-
-modules.forEach(loadSecurityModule);
+My goal was building a product rather than only a technical demo.
 `,
-    },
 
 
-    "2": {
-      id: 2,
-
-      title: "Secure Chat Application",
-
-      subtitle:
-        "End-to-end encrypted messaging application with threat modeling",
-
-      tags: [
-        "Node.js",
-        "React",
-        "Encryption",
-        "Security",
-      ],
-
-      repoUrl:
-        "https://github.com/devsec-ali/secure-chat",
-
-      demoUrl:
-        "https://secure-chat-demo.com",
-
-
-      problem: `
-Traditional messaging applications often store user messages on servers.
-
-If the server is compromised, sensitive conversations may become exposed.
-
-The goal of this project was to create a messaging application where only the sender and recipient can access message contents.
-      `,
-
-
-      threatModel: `
-Threats considered:
-
-• Eavesdropping
-• Man-in-the-middle attacks
-• Replay attacks
-• Server compromise
-• Malicious input
-
-Security controls were designed around protecting message confidentiality and user data.
-      `,
-
-
-      implementation: `
-The application uses React for the frontend and Node.js for backend services.
-
-Messages are encrypted before being stored by the server.
-
-Technical decisions:
-
-• Client-side encryption
-• Secure key exchange
-• Encrypted message storage
-• Protected API communication
-      `,
-
-
-      securityDecisions: `
-1. Input validation to reduce injection risks.
-
-2. JWT authentication with secure token handling.
-
-3. Environment variables for sensitive configuration.
-
-4. Dependency auditing for vulnerable packages.
-
-5. Restricted CORS configuration.
-
-6. Rate limiting to reduce abuse.
-      `,
-
-
-      improvements: `
-Future improvements:
-
-• Perfect Forward Secrecy
-• Hardware security modules
-• Security testing automation
-• Advanced key management
-• Audit logging
-      `,
-
-
-      code: `
-// Example: Encrypting a message
-
-function encryptMessage(message) {
-  return encryptedPayload;
+metrics:[
+{
+label:"Components",
+value:"25+"
+},
+{
+label:"Technologies",
+value:"8"
+},
+{
+label:"Focus",
+value:"AI + Data"
 }
+],
+
+
+architecture:[
+"React Frontend",
+"API Layer",
+"AI Processing",
+"Data Visualization"
+],
+
+
+problem:
+`
+Financial information is often difficult to understand because users need
+to combine multiple sources of data.
+
+The goal was creating a simple interface where users can explore,
+visualize, and analyze information through intelligent software.
 `,
-    },
 
 
-    "3": {
-      id: 3,
-
-      title: "Cybersecurity Portfolio Website",
-
-      subtitle:
-        "A security-focused portfolio built to demonstrate engineering decisions and cybersecurity mindset",
-
-      tags: [
-        "React",
-        "TypeScript",
-        "Tailwind CSS",
-        "Web Development",
-      ],
-
-      repoUrl:
-        "https://github.com/YOUR_USERNAME/cybersecurity-portfolio",
-
-      demoUrl:
-        "https://YOUR-PORTFOLIO-LINK.com",
+decisions:[
+"Used TypeScript to improve reliability",
+"Created reusable React components",
+"Separated UI and business logic",
+"Designed architecture for future AI expansion"
+],
 
 
-      problem: `
-Cybersecurity professionals need more than a list of skills. They need a way to demonstrate how they think, design, and solve problems.
-
-The goal was to build a portfolio that communicates technical ability through real projects and detailed case studies.
-      `,
-
-
-      threatModel: `
-The portfolio follows security-focused development principles:
-
-• Clear project documentation
-• Secure coding practices
-• Attention to user experience
-• Separation of concerns
-      `,
+timeline:[
+"Research and planning",
+"Frontend development",
+"AI integration",
+"Testing and improvements"
+],
 
 
-      implementation: `
-Built using React, TypeScript, Tailwind CSS, and modern component architecture.
-
-The design follows a modern hacker minimalism approach:
-
-• Dark-first interface
-• Cyan security accents
-• Technical typography
-• Case-study driven presentation
-      `,
+lessons:[
+"Designing scalable frontend architecture",
+"Integrating AI into real products",
+"Building maintainable software systems"
+],
 
 
-      securityDecisions: `
-• Component-based architecture
-• Maintainable code structure
-• Clear project documentation
-• Focus on practical security engineering
-      `,
-
-
-      improvements: `
+improvements:
+`
 Future improvements:
 
-• More real-world case studies
-• Additional security projects
-• Interactive demonstrations
-• Technical blog section
-      `,
+• Real-time data integration
 
+• Cloud deployment
 
-      code: `
-// Example component structure
+• Authentication
 
-function PortfolioProject() {
-  return <ProjectCard />;
-}
+• Machine learning models
+
+• Automated testing
+
 `,
-    },
-  };
+
+
+
+},
+
+
+
+
+"2": {
+
+
+id:2,
+
+title:"J.A.R.V.I.S. Cybersecurity Platform",
+
+subtitle:
+"A Security Operations Center dashboard focused on monitoring, threat intelligence, and incident response.",
+
+
+tags:[
+"React",
+"TypeScript",
+"Cybersecurity",
+"SOC"
+],
+
+
+repoUrl:
+"https://github.com/YOUR_USERNAME/jarvis",
+
+
+demoUrl:
+"https://YOUR-DEMO.com",
+
+
+overview:
+`
+J.A.R.V.I.S. is a cybersecurity platform designed to simulate
+a modern Security Operations Center environment.
+
+The project explores how security analysts interact with
+alerts, incidents, and threat intelligence.
+`,
+
+
+metrics:[
+{
+label:"Modules",
+value:"8"
+},
+{
+label:"Focus",
+value:"SOC"
+},
+{
+label:"Status",
+value:"Building"
+}
+],
+
+
+architecture:[
+"React Dashboard",
+"Security API",
+"Threat Intelligence",
+"Monitoring System"
+],
+
+
+problem:
+`
+Security teams often use many disconnected tools.
+
+The goal was designing one interface that improves visibility
+and simplifies security workflows.
+`,
+
+
+decisions:[
+"Security workflow based design",
+"Reusable dashboard components",
+"TypeScript architecture",
+"Future SIEM integration"
+],
+
+
+timeline:[
+"Research",
+"UI Development",
+"Security Modules",
+"Future Integration"
+],
+
+
+lessons:[
+"Security UX design",
+"Threat modeling",
+"Building complex dashboards"
+],
+
+
+improvements:
+`
+Future improvements:
+
+• Real security telemetry
+
+• Wazuh integration
+
+• MITRE ATT&CK mapping
+
+• Automated response
+
+`
+
+},
+
+
+
+
+"3": {
+
+
+id:3,
+
+title:"Pink Panther",
+
+subtitle:
+"A premium frontend project focused on branding, design systems, and user experience.",
+
+
+tags:[
+"React",
+"Tailwind",
+"UI/UX"
+],
+
+
+repoUrl:
+"https://github.com/YOUR_USERNAME/pink-panther",
+
+
+demoUrl:
+"https://YOUR-DEMO.com",
+
+
+overview:
+`
+Pink Panther demonstrates frontend engineering
+combined with modern product design principles.
+`,
+
+
+metrics:[
+{
+label:"Type",
+value:"Frontend"
+},
+{
+label:"Focus",
+value:"UX"
+},
+{
+label:"Stack",
+value:"React"
+}
+],
+
+
+architecture:[
+"React Components",
+"Design System",
+"Responsive UI",
+"Deployment"
+],
+
+
+problem:
+`
+Many websites function correctly but fail to create memorable experiences.
+
+This project focused on balancing visual design and engineering quality.
+`,
+
+
+decisions:[
+"Component architecture",
+"Reusable UI patterns",
+"Responsive layouts"
+],
+
+
+timeline:[
+"Design",
+"Development",
+"Testing",
+"Polishing"
+],
+
+
+lessons:[
+"Frontend architecture",
+"UX thinking",
+"Visual consistency"
+],
+
+
+improvements:
+`
+Future improvements:
+
+• Backend integration
+
+• CMS
+
+• Analytics
+
+`
+
+}
+
+};
 
 
   const project = projects[params?.id as keyof typeof projects];
@@ -480,225 +539,513 @@ function PortfolioProject() {
 
 
 
-      {/* Content */}
+      {/* Case Study Content */}
 
-      <section className="py-20">
+<section className="py-20">
 
-        <div className="
-          container
-          max-w-3xl
-          space-y-16
-        ">
+<div className="container max-w-5xl space-y-20">
 
 
+{/* OVERVIEW */}
 
-          {/* Problem */}
+<div className="
+rounded-xl
+border
+border-border
+p-8
+bg-secondary/20
+">
 
-          <div className="space-y-4">
 
-            <h2 className="text-3xl font-bold">
-              Problem
-            </h2>
+<h2 className="text-3xl font-bold mb-6">
+Project Overview
+</h2>
 
 
-            <p className="
-              text-muted-foreground
-              leading-relaxed
-              whitespace-pre-wrap
-            ">
-              {project.problem}
-            </p>
+<p className="
+text-muted-foreground
+leading-relaxed
+whitespace-pre-wrap
+">
+{project.overview}
+</p>
 
-          </div>
 
+</div>
 
 
 
-          {/* Threat Model */}
 
-          <div className="space-y-4">
 
-            <h2 className="text-3xl font-bold">
-              Security Thinking
-            </h2>
+{/* METRICS */}
 
 
-            <p className="
-              text-muted-foreground
-              leading-relaxed
-              whitespace-pre-wrap
-            ">
-              {project.threatModel}
-            </p>
+<div>
 
 
-          </div>
+<h2 className="text-3xl font-bold mb-8">
+Project Metrics
+</h2>
 
 
+<div className="grid md:grid-cols-3 gap-6">
 
 
-          {/* Implementation */}
+{project.metrics?.map((item)=>(
+<div
+key={item.label}
+className="
+rounded-xl
+border
+border-border
+p-6
+text-center
+"
+>
 
-          <div className="space-y-4">
 
+<p className="
+text-3xl
+font-bold
+text-accent
+">
 
-            <h2 className="text-3xl font-bold">
-              Implementation
-            </h2>
+{item.value}
 
+</p>
 
 
-            <p className="
-              text-muted-foreground
-              leading-relaxed
-              whitespace-pre-wrap
-            ">
-              {project.implementation}
-            </p>
+<p className="
+text-sm
+text-muted-foreground
+mt-2
+">
 
+{item.label}
 
+</p>
 
 
-            {/* Code */}
+</div>
+))}
 
-            <div className="
-              mt-6
-              rounded-lg
-              bg-secondary
-              border
-              border-border
-              p-5
-              overflow-x-auto
-            ">
 
+</div>
 
-              <pre className="
-                text-sm
-                font-mono
-                text-muted-foreground
-              ">
 
-                <code>
+</div>
 
-                  {project.code}
 
-                </code>
 
 
-              </pre>
 
 
-            </div>
+{/* ARCHITECTURE */}
 
 
-          </div>
 
+<div>
 
 
+<h2 className="text-3xl font-bold mb-8">
 
+Architecture
 
-          {/* Security Decisions */}
+</h2>
 
-          <div className="space-y-4">
 
-            <h2 className="text-3xl font-bold">
-              Security Decisions
-            </h2>
 
+<div className="
+grid
+md:grid-cols-4
+gap-4
+">
 
-            <p className="
-              text-muted-foreground
-              leading-relaxed
-              whitespace-pre-wrap
-            ">
 
-              {project.securityDecisions}
+{project.architecture?.map((item,index)=>(
 
-            </p>
+<div
+key={item}
+className="
+relative
+rounded-xl
+border
+border-border
+p-6
+text-center
+bg-secondary/20
+"
+>
 
 
-          </div>
+<Layers
+className="
+mx-auto
+mb-4
+text-accent
+"
+/>
 
 
+<p className="font-medium">
 
+{item}
 
+</p>
 
-          {/* Improvements */}
 
-          <div className="space-y-4">
+{index !== project.architecture.length -1 && (
 
+<span className="
+hidden
+md:block
+absolute
+right-[-15px]
+top-1/2
+text-accent
+">
 
-            <h2 className="text-3xl font-bold">
-              What I'd Improve Next
-            </h2>
+→
 
+</span>
 
+)}
 
-            <p className="
-              text-muted-foreground
-              leading-relaxed
-              whitespace-pre-wrap
-            ">
 
-              {project.improvements}
 
-            </p>
+</div>
 
 
-          </div>
+))}
 
 
+</div>
 
 
+</div>
 
 
-          {/* CTA */}
 
-          <div className="
-            border-t
-            border-border
-            pt-12
+
+
+
+
+{/* PROBLEM */}
+
+
+<div>
+
+
+<h2 className="text-3xl font-bold mb-6">
+
+Problem
+
+</h2>
+
+
+<p className="
+text-muted-foreground
+leading-relaxed
+whitespace-pre-wrap
+">
+
+{project.problem}
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+{/* ENGINEERING DECISIONS */}
+
+
+
+<div>
+
+
+<h2 className="text-3xl font-bold mb-8">
+
+Engineering Decisions
+
+</h2>
+
+
+<div className="grid md:grid-cols-2 gap-5">
+
+
+{project.decisions?.map((item)=>(
+
+
+<div
+key={item}
+className="
+rounded-xl
+border
+border-border
+p-6
+"
+>
+
+
+<CheckCircle
+className="
+text-accent
+mb-4
+"
+/>
+
+
+<p className="
+text-muted-foreground
+">
+
+{item}
+
+</p>
+
+
+</div>
+
+
+))}
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+{/* TIMELINE */}
+
+
+
+<div>
+
+
+<h2 className="text-3xl font-bold mb-8">
+
+Development Timeline
+
+</h2>
+
+
+
+<div className="space-y-5">
+
+
+{project.timeline?.map((item,index)=>(
+
+
+<div
+key={item}
+className="
+flex
+items-center
+gap-5
+"
+>
+
+
+<div className="
+h-10
+w-10
+rounded-full
+bg-accent/10
+text-accent
+flex
+items-center
+justify-center
+font-bold
+">
+
+{index+1}
+
+</div>
+
+
+
+<p>
+
+{item}
+
+</p>
+
+
+</div>
+
+
+))}
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+{/* LESSONS */}
+
+
+
+<div>
+
+
+<h2 className="text-3xl font-bold mb-8">
+
+Lessons Learned
+
+</h2>
+
+
+
+<div className="
+grid
+md:grid-cols-3
+gap-5
+">
+
+
+{project.lessons?.map((item)=>(
+
+
+<div
+key={item}
+className="
+rounded-xl
+border
+border-border
+p-6
+"
+>
+
+
+<Lightbulb
+className="
+text-accent
+mb-4
+"
+/>
+
+
+<p className="
+text-muted-foreground
+">
+
+{item}
+
+</p>
+
+
+</div>
+
+
+
+))}
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+{/* IMPROVEMENTS */}
+
+
+
+<div>
+
+
+<h2 className="text-3xl font-bold mb-6">
+
+Future Improvements
+
+</h2>
+
+
+<p className="
+text-muted-foreground
+leading-relaxed
+whitespace-pre-wrap
+">
+
+{project.improvements}
+
+</p>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</section>
+
+      {/* CTA */}
+
+      <section className="border-t border-border py-12">
+
+        <div className="container">
+
+          <p className="
+            text-muted-foreground
+            mb-6
           ">
 
+            Interested in my engineering approach?
 
-            <p className="
-              text-muted-foreground
-              mb-6
-            ">
-
-              Interested in my approach to secure software development and cybersecurity engineering?
-
-            </p>
+          </p>
 
 
+          <Link href="/contact">
 
-            <Link href="/contact">
+            <span
+              className="
+              inline-flex
+              px-6
+              py-3
+              rounded-md
+              bg-accent
+              text-accent-foreground
+              font-medium
+              cursor-pointer
+              hover:opacity-90
+              transition
+              "
+            >
 
-              <span
-                className="
-                inline-flex
-                px-6
-                py-3
-                rounded-md
-                bg-accent
-                text-accent-foreground
-                font-medium
-                cursor-pointer
-                hover:opacity-90
-                transition
-                "
-              >
+              Get in Touch
 
-                Get in Touch
+            </span>
 
-              </span>
-
-
-            </Link>
-
-
-          </div>
-
+          </Link>
 
 
         </div>
