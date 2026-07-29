@@ -1,4 +1,5 @@
-import { useRoute } from "wouter";
+import { useRoute, Link } from "wouter";
+
 import {
   Github,
   ExternalLink,
@@ -6,9 +7,13 @@ import {
   Layers,
   CheckCircle,
   Lightbulb,
+  Sparkles,
+  Shield,
+  Cpu,
 } from "lucide-react";
-import { Link } from "wouter";
+
 import Layout from "@/components/Layout";
+
 import jarvis from "@/images/jarvis.png";
 import jarvisDiagram from "@/images/jarvisdiagram.png";
 
@@ -18,34 +23,132 @@ import terminalDiagram from "@/images/terminaldiagram.png";
 import pink from "@/images/pink.png";
 import pinkDiagram from "@/images/pinkdiagram.png";
 
-/**
- * ProjectDetail page
- *
- * Dynamic case study page.
- * Projects are loaded by URL:
- *
- * /projects/1 -> J.A.R.V.I.S.
- * /projects/2 -> Secure Chat
- * /projects/3 -> Cybersecurity Portfolio
- */
+
+
+const themes = {
+
+ai: {
+
+name:"AI Intelligence System",
+
+background:"#0B0E16",
+
+glow:
+"radial-gradient(circle, rgba(214,165,68,.22), transparent 65%)",
+
+accent:"#D6A544",
+
+accentSoft:"#E4B95E",
+
+card:
+"bg-[#161E3F]/60",
+
+border:
+"border-[#2D3650]",
+
+button:
+"bg-[#D6A544] text-[#0B0E16]",
+
+icon:Cpu
+
+},
+
+
+
+security: {
+
+name:"Security Operations Center",
+
+background:"#0B0E16",
+
+glow:
+"radial-gradient(circle, rgba(181,26,43,.28), transparent 65%)",
+
+accent:"#B51A2B",
+
+accentSoft:"#D02B40",
+
+card:
+"bg-[#161E3F]/60",
+
+border:
+"border-[#2D3650]",
+
+button:
+"bg-[#B51A2B] text-white",
+
+icon:Shield
+
+},
+
+
+
+
+pink: {
+
+name:"Luxury Creative System",
+
+background:"#0D0B10",
+
+glow:
+"radial-gradient(circle, rgba(232,138,168,.28), transparent 65%)",
+
+accent:"#E8A7B8",
+
+accentSoft:"#F6C5D5",
+
+card:
+"bg-[#21151D]/70",
+
+border:
+"border-[#3A2630]",
+
+button:
+"bg-[#E8A7B8] text-black",
+
+icon:Sparkles
+
+}
+
+};
+
+
+
+
 
 export default function ProjectDetail() {
-  const [match, params] = useRoute("/projects/:id");
 
-  if (!match) return null;
 
-  const projects = {
+const [match, params] = useRoute("/projects/:id");
+
+
+if(!match)
+return null;
+
+
+
+
+const projects = {
+
+
 
 "1": {
 
+
 id:1,
 
+theme:"ai",
+
 title:"AI Portfolio Terminal",
-image: terminal,
-diagram: terminalDiagram,
+
+image:terminal,
+
+diagram:terminalDiagram,
+
 
 subtitle:
 "An AI-powered financial intelligence platform combining data analysis, risk simulation, and intelligent software design.",
+
 
 
 tags:[
@@ -57,6 +160,7 @@ tags:[
 ],
 
 
+
 repoUrl:
 "https://github.com/TonyStark170538/portfolio",
 
@@ -65,73 +169,102 @@ demoUrl:
 "https://portfolio-chi-navy-93.vercel.app",
 
 
+
 overview:
 `
-AI Portfolio Terminal is an application exploring how artificial intelligence
+AI Portfolio Terminal explores how artificial intelligence
 can improve financial analysis and decision making.
 
-The project combines frontend engineering, data processing,
-and AI workflows into one interactive experience.
-
-My goal was building a product rather than only a technical demo.
+The project combines frontend engineering,
+data processing, and AI workflows into one interactive experience.
 `,
 
 
+
 metrics:[
+
 {
 label:"Components",
 value:"25+"
 },
+
 {
 label:"Technologies",
 value:"8"
 },
+
 {
 label:"Focus",
 value:"AI + Data"
 }
+
 ],
+
 
 
 architecture:[
+
 "React Frontend",
+
 "API Layer",
+
 "AI Processing",
+
 "Data Visualization"
+
 ],
+
 
 
 problem:
 `
-Financial information is often difficult to understand because users need
-to combine multiple sources of data.
+Financial information is often difficult to understand
+because users must combine multiple sources of data.
 
-The goal was creating a simple interface where users can explore,
-visualize, and analyze information through intelligent software.
+The goal was creating a simple interface where users
+can explore and analyze information through intelligent software.
 `,
 
 
+
 decisions:[
+
 "Used TypeScript to improve reliability",
+
 "Created reusable React components",
+
 "Separated UI and business logic",
+
 "Designed architecture for future AI expansion"
+
 ],
+
 
 
 timeline:[
+
 "Research and planning",
+
 "Frontend development",
+
 "AI integration",
+
 "Testing and improvements"
+
 ],
+
 
 
 lessons:[
+
 "Designing scalable frontend architecture",
+
 "Integrating AI into real products",
+
 "Building maintainable software systems"
+
 ],
+
 
 
 improvements:
@@ -147,12 +280,10 @@ Future improvements:
 • Machine learning models
 
 • Automated testing
-
-`,
-
-
+`
 
 },
+
 
 
 
@@ -162,94 +293,139 @@ Future improvements:
 
 id:2,
 
+theme:"security",
+
 title:"J.A.R.V.I.S. Cybersecurity Platform",
-image: jarvis,
-diagram: jarvisDiagram,
+
+image:jarvis,
+
+diagram:jarvisDiagram,
+
+
 
 subtitle:
 "A Security Operations Center dashboard focused on monitoring, threat intelligence, and incident response.",
 
 
+
 tags:[
+
 "React",
+
 "TypeScript",
+
 "Cybersecurity",
+
 "SOC"
+
 ],
+
 
 
 repoUrl:
 "https://github.com/TonyStark170538/jarvis-platform",
 
 
+
 demoUrl:
 "https://jarvis-platform-gamma.vercel.app",
 
 
+
 overview:
 `
-J.A.R.V.I.S. is a cybersecurity platform designed to simulate
-a modern Security Operations Center environment.
+J.A.R.V.I.S. is a cybersecurity platform designed
+to simulate a modern Security Operations Center environment.
 
-The project explores how security analysts interact with
-alerts, incidents, and threat intelligence.
+The project explores how security analysts interact
+with alerts, incidents, and threat intelligence.
 `,
 
 
+
 metrics:[
+
 {
 label:"Modules",
 value:"8"
 },
+
 {
 label:"Focus",
 value:"SOC"
 },
+
 {
 label:"Status",
 value:"Building"
 }
+
 ],
+
 
 
 architecture:[
+
 "React Dashboard",
+
 "Security API",
+
 "Threat Intelligence",
+
 "Monitoring System"
+
 ],
+
 
 
 problem:
 `
 Security teams often use many disconnected tools.
 
-The goal was designing one interface that improves visibility
-and simplifies security workflows.
+The goal was designing one interface that improves
+visibility and simplifies security workflows.
 `,
 
 
+
 decisions:[
+
 "Security workflow based design",
+
 "Reusable dashboard components",
+
 "TypeScript architecture",
+
 "Future SIEM integration"
+
 ],
+
 
 
 timeline:[
+
 "Research",
+
 "UI Development",
+
 "Security Modules",
+
 "Future Integration"
+
 ],
+
 
 
 lessons:[
+
 "Security UX design",
+
 "Threat modeling",
+
 "Building complex dashboards"
+
 ],
+
 
 
 improvements:
@@ -271,93 +447,142 @@ Future improvements:
 
 
 
+
 "3": {
 
 
 id:3,
 
+theme:"pink",
+
 title:"Pink Panther",
-image: pink,
-diagram: pinkDiagram,
+
+image:pink,
+
+diagram:pinkDiagram,
+
+
 
 subtitle:
 "A premium frontend project focused on branding, design systems, and user experience.",
 
 
+
 tags:[
+
 "React",
+
 "Tailwind",
+
 "UI/UX"
+
 ],
+
 
 
 repoUrl:
 "https://github.com/TonyStark170538/pinkpanther",
 
 
+
 demoUrl:
 "https://pinkpanther1.onrender.com/",
+
 
 
 overview:
 `
 Pink Panther demonstrates frontend engineering
 combined with modern product design principles.
+
+The focus was creating a memorable digital experience
+while maintaining strong engineering foundations.
 `,
 
 
+
 metrics:[
+
 {
 label:"Type",
 value:"Frontend"
 },
+
 {
 label:"Focus",
 value:"UX"
 },
+
 {
 label:"Stack",
 value:"React"
 }
+
 ],
+
 
 
 architecture:[
+
 "React Components",
+
 "Design System",
+
 "Responsive UI",
+
 "Deployment"
+
 ],
+
 
 
 problem:
 `
-Many websites function correctly but fail to create memorable experiences.
+Many websites function correctly but fail
+to create memorable experiences.
 
-This project focused on balancing visual design and engineering quality.
+This project focused on balancing visual design
+and engineering quality.
 `,
 
 
+
 decisions:[
+
 "Component architecture",
+
 "Reusable UI patterns",
+
 "Responsive layouts"
+
 ],
+
 
 
 timeline:[
+
 "Design",
+
 "Development",
+
 "Testing",
+
 "Polishing"
+
 ],
+
 
 
 lessons:[
+
 "Frontend architecture",
+
 "UX thinking",
+
 "Visual consistency"
+
 ],
+
 
 
 improvements:
@@ -374,234 +599,506 @@ Future improvements:
 
 }
 
+
 };
 
 
-  const project = projects[params?.id as keyof typeof projects];
 
-  if (!project) {
-    return (
-      <Layout>
-        <section className="py-20">
-          <div className="container text-center">
-            <h1 className="text-4xl font-bold">Project Not Found</h1>
 
-            <Link href="/projects">
-              <span className="inline-flex mt-6 text-accent cursor-pointer">Back to Projects</span>
-            </Link>
-          </div>
-        </section>
-      </Layout>
-    );
-  }
 
-  return (
-    <Layout>
+const project =
+projects[params?.id as keyof typeof projects];
 
-      {/* Back Button */}
-      <section className="border-b border-border">
-        <div className="container py-4">
 
-          <Link href="/projects">
 
-            <span className="
-              inline-flex
-              items-center
-              gap-2
-              text-accent
-              hover:gap-3
-              transition-all
-              font-medium
-              text-sm
-              cursor-pointer
-            ">
+if(!project){
 
-              <ArrowLeft size={16} />
+return(
 
-              Back to Projects
+<Layout>
 
-            </span>
+<section className="py-32">
 
-          </Link>
+<div className="container text-center">
 
-        </div>
-      </section>
+<h1 className="text-5xl font-bold">
+Project Not Found
+</h1>
 
 
+<Link href="/projects">
 
-      {/* Hero */}
-      <section className="py-16 border-b border-border">
+<span className="
+inline-flex
+mt-8
+text-[#D6A544]
+cursor-pointer
+">
 
-        <div className="container space-y-6">
+Back to Projects
 
+</span>
 
-          <p className="text-accent font-mono text-sm">
-            Case Study
-          </p>
+</Link>
 
 
-          <h1 className="text-5xl font-bold">
-            {project.title}
-          </h1>
+</div>
 
+</section>
 
-          <p className="text-xl text-muted-foreground max-w-3xl">
-            {project.subtitle}
-          </p>
+</Layout>
 
-          <section className="py-16 border-b border-border">
-            <div className="container">
+)
 
-              <div className="overflow-hidden rounded-xl border border-border shadow-xl">
+}
 
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full object-cover"
-                />
 
-              </div>
 
-            </div>
-          </section>
 
 
+const theme =
+project.theme === "ai"
+?
+themes.ai
+:
+project.theme === "security"
+?
+themes.security
+:
+themes.pink;
 
-          {/* Tags */}
 
-          <div className="flex flex-wrap gap-2">
 
-            {project.tags.map((tag) => (
+const ThemeIcon = theme.icon;
+return (
 
-              <span
-                key={tag}
-                className="
-                px-3
-                py-1
-                rounded
-                bg-secondary
-                text-sm
-                text-muted-foreground
-                "
-              >
+<Layout>
 
-                {tag}
 
-              </span>
+{/* PROJECT HERO */}
 
-            ))}
+<section
+className="
+relative
+overflow-hidden
+py-20
+"
+style={{
+background:
+`linear-gradient(
+135deg,
+${theme.background},
+#161E3F
+)`
+}}
+>
 
-          </div>
 
+{/* Atmospheric Glow */}
 
+<div
+className="
+absolute
+inset-0
+pointer-events-none
+"
+style={{
+background:theme.glow
+}}
+/>
 
-          {/* Buttons */}
 
-          <div className="flex flex-wrap gap-4 pt-4">
 
+<div className="container relative">
 
-            <a
-              href={project.repoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-              inline-flex
-              items-center
-              gap-2
-              px-5
-              py-3
-              rounded-md
-              border
-              border-border
-              hover:border-accent
-              transition-all
-              text-sm
-              font-medium
-              "
-            >
 
-              <Github size={16}/>
+<Link href="/projects">
 
-              View Repository
+<span
+className="
+inline-flex
+items-center
+gap-2
+text-sm
+mb-10
+text-muted-foreground
+hover:text-white
+transition
+cursor-pointer
+"
+>
 
-            </a>
+<ArrowLeft size={16}/>
 
+Back to Projects
 
+</span>
 
-            {project.demoUrl && (
+</Link>
 
-              <a
-                href={project.demoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="
-                inline-flex
-                items-center
-                gap-2
-                px-5
-                py-3
-                rounded-md
-                bg-accent
-                text-accent-foreground
-                hover:opacity-90
-                transition
-                text-sm
-                font-medium
-                "
-              >
 
-                <ExternalLink size={16}/>
 
-                Live Demo
 
-              </a>
 
-            )}
+<div className="grid lg:grid-cols-2 gap-14 items-center">
 
 
-          </div>
 
+<div className="space-y-8">
 
-        </div>
 
-      </section>
 
+<div
+className="
+flex
+items-center
+gap-3
+font-mono
+text-sm
+"
+style={{
+color:theme.accent
+}}
+>
 
+<ThemeIcon size={18}/>
 
+{theme.name}
 
-      {/* Case Study Content */}
+</div>
 
-<section className="py-20">
 
-<div className="container max-w-5xl space-y-20">
+
+
+
+<h1
+className="
+text-5xl
+md:text-6xl
+font-bold
+leading-tight
+"
+>
+
+{project.title}
+
+</h1>
+
+
+
+
+
+<p
+className="
+text-xl
+text-muted-foreground
+leading-relaxed
+max-w-xl
+"
+>
+
+{project.subtitle}
+
+</p>
+
+
+
+
+
+
+
+<div className="flex flex-wrap gap-3">
+
+
+{project.tags.map(tag=>(
+
+
+<span
+
+key={tag}
+
+className="
+px-3
+py-1
+rounded-full
+text-xs
+border
+"
+style={{
+
+borderColor:theme.accent,
+
+color:theme.accent
+
+}}
+
+>
+
+{tag}
+
+</span>
+
+
+))}
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div className="flex flex-wrap gap-4 pt-4">
+
+
+
+<a
+
+href={project.repoUrl}
+
+target="_blank"
+
+className="
+inline-flex
+items-center
+gap-2
+px-6
+py-3
+rounded-full
+font-medium
+transition
+hover:scale-105
+"
+
+style={{
+
+background:theme.accent,
+
+color:
+project.theme==="pink"
+?
+"#000"
+:
+"#0B0E16"
+
+}}
+
+>
+
+
+<Github size={17}/>
+
+Repository
+
+
+</a>
+
+
+
+
+
+
+
+<a
+
+href={project.demoUrl}
+
+target="_blank"
+
+className="
+inline-flex
+items-center
+gap-2
+px-6
+py-3
+rounded-full
+border
+font-medium
+transition
+hover:scale-105
+"
+
+style={{
+
+borderColor:theme.accent,
+
+color:theme.accent
+
+}}
+
+>
+
+
+<ExternalLink size={17}/>
+
+Live Demo
+
+
+</a>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+{/* IMAGE */}
+
+<div
+className="
+relative
+"
+>
+
+
+<div
+
+className="
+absolute
+inset-0
+blur-3xl
+opacity-40
+"
+style={{
+background:theme.accent
+}}
+
+/>
+
+
+
+<div
+className="
+relative
+rounded-3xl
+overflow-hidden
+border
+shadow-2xl
+"
+style={{
+
+borderColor:theme.accent
+
+}}
+
+>
+
+
+<img
+
+src={project.image}
+
+alt={project.title}
+
+className="
+w-full
+object-cover
+"
+
+/>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
 
 
 {/* OVERVIEW */}
 
-<div className="
-rounded-xl
-border
-border-border
+
+
+<section className="py-20">
+
+
+<div className="container max-w-5xl">
+
+
+<div
+
+className="
+rounded-3xl
 p-8
-bg-secondary/20
-">
+backdrop-blur-xl
+border
+"
+
+style={{
+
+background:"rgba(36,47,73,.72)",
+
+borderColor:theme.accent
+
+}}
+
+>
+
 
 
 <h2 className="text-3xl font-bold mb-6">
+
 Project Overview
+
 </h2>
 
 
-<p className="
-text-muted-foreground
-leading-relaxed
+
+<p
+
+className="
 whitespace-pre-wrap
-">
+leading-relaxed
+text-muted-foreground
+"
+
+>
+
 {project.overview}
+
 </p>
 
 
 </div>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
 
 
 
@@ -610,53 +1107,90 @@ whitespace-pre-wrap
 {/* METRICS */}
 
 
-<div>
+<section className="pb-20">
+
+
+<div className="container">
 
 
 <h2 className="text-3xl font-bold mb-8">
-Project Metrics
+
+System Metrics
+
 </h2>
 
 
-<div className="grid md:grid-cols-3 gap-6">
+
+<div className="
+grid
+md:grid-cols-3
+gap-6
+">
 
 
-{project.metrics?.map((item)=>(
+{project.metrics.map(metric=>(
+
+
 <div
-key={item.label}
+
+key={metric.label}
+
 className="
-rounded-xl
+rounded-3xl
+p-7
 border
-border-border
-p-6
-text-center
+backdrop-blur
+transition
+hover:-translate-y-2
 "
+
+style={{
+
+background:"rgba(36,47,73,.55)",
+
+borderColor:"#2D3650"
+
+}}
+
 >
 
 
-<p className="
-text-3xl
+<p
+
+className="
+text-4xl
 font-bold
-text-accent
-">
+mb-2
+"
 
-{item.value}
+style={{
+
+color:theme.accent
+
+}}
+
+>
+
+{metric.value}
 
 </p>
 
 
 <p className="
-text-sm
 text-muted-foreground
-mt-2
+font-mono
+text-sm
 ">
 
-{item.label}
+{metric.label}
 
 </p>
+
 
 
 </div>
+
+
 ))}
 
 
@@ -664,6 +1198,12 @@ mt-2
 
 
 </div>
+
+
+</section>
+
+
+
 
 
 
@@ -674,54 +1214,115 @@ mt-2
 
 
 
-<div>
+<section className="pb-24">
 
 
-<div className="space-y-8">
-  <div className="overflow-hidden rounded-xl border border-border bg-secondary/20 p-6">
+<div className="container">
 
-    <img
-      src={project.diagram}
-      alt="Architecture Diagram"
-      className="w-full rounded-lg"
-    />
 
-  </div>
+<h2 className="text-3xl font-bold mb-10">
+
+Architecture
+
+</h2>
+
+
+
+
+
+<div
+
+className="
+rounded-3xl
+border
+p-6
+mb-10
+"
+
+style={{
+
+borderColor:"#2D3650",
+
+background:"rgba(36,47,73,.5)"
+
+}}
+
+>
+
+
+<img
+
+src={project.diagram}
+
+alt="Architecture"
+
+className="
+rounded-2xl
+w-full
+"
+
+/>
+
 
 </div>
+
+
+
+
+
 
 
 
 <div className="
 grid
 md:grid-cols-4
-gap-4
+gap-5
 ">
 
 
-{project.architecture?.map((item,index)=>(
+{project.architecture.map((item,index)=>(
+
 
 <div
+
 key={item}
+
 className="
 relative
-rounded-xl
+rounded-2xl
 border
-border-border
 p-6
 text-center
-bg-secondary/20
+transition
+hover:-translate-y-2
 "
+
+style={{
+
+borderColor:theme.accent,
+
+background:"rgba(36,47,73,.45)"
+
+}}
+
 >
 
 
 <Layers
+
 className="
 mx-auto
 mb-4
-text-accent
 "
+
+style={{
+
+color:theme.accent
+
+}}
+
 />
+
 
 
 <p className="font-medium">
@@ -731,16 +1332,25 @@ text-accent
 </p>
 
 
-{index !== project.architecture.length -1 && (
 
-<span className="
+
+{index !== project.architecture.length-1 && (
+
+<span
+className="
 hidden
 md:block
 absolute
 right-[-15px]
 top-1/2
-text-accent
-">
+"
+style={{
+
+color:theme.accent
+
+}}
+
+>
 
 →
 
@@ -756,35 +1366,59 @@ text-accent
 ))}
 
 
-</div>
-
 
 </div>
 
 
 
 
+</div>
 
 
-
+</section>
 {/* PROBLEM */}
 
+<section className="pb-20">
 
-<div>
+<div className="container max-w-5xl">
 
 
-<h2 className="text-3xl font-bold mb-6">
+<h2 className="text-3xl font-bold mb-8">
 
 Problem
 
 </h2>
 
 
-<p className="
-text-muted-foreground
-leading-relaxed
+
+<div
+
+className="
+rounded-3xl
+border
+p-8
+"
+
+style={{
+
+background:"rgba(36,47,73,.45)",
+
+borderColor:"#2D3650"
+
+}}
+
+>
+
+
+<p
+
+className="
 whitespace-pre-wrap
-">
+leading-relaxed
+text-muted-foreground
+"
+
+>
 
 {project.problem}
 
@@ -792,6 +1426,13 @@ whitespace-pre-wrap
 
 
 </div>
+
+
+
+</div>
+
+</section>
+
 
 
 
@@ -803,7 +1444,10 @@ whitespace-pre-wrap
 
 
 
-<div>
+<section className="pb-20">
+
+
+<div className="container max-w-5xl">
 
 
 <h2 className="text-3xl font-bold mb-8">
@@ -813,34 +1457,60 @@ Engineering Decisions
 </h2>
 
 
-<div className="grid md:grid-cols-2 gap-5">
 
 
-{project.decisions?.map((item)=>(
+<div className="
+grid
+md:grid-cols-2
+gap-6
+">
+
+
+{project.decisions.map(item=>(
+
 
 
 <div
+
 key={item}
+
 className="
-rounded-xl
+rounded-3xl
 border
-border-border
 p-6
+flex
+gap-4
+items-start
+transition
+hover:-translate-y-1
 "
+
+style={{
+
+background:"rgba(36,47,73,.55)",
+
+borderColor:"#2D3650"
+
+}}
+
 >
 
 
 <CheckCircle
-className="
-text-accent
-mb-4
-"
+
+size={24}
+
+style={{
+
+color:theme.accent
+
+}}
+
 />
 
 
-<p className="
-text-muted-foreground
-">
+
+<p className="text-muted-foreground">
 
 {item}
 
@@ -856,7 +1526,13 @@ text-muted-foreground
 </div>
 
 
+
 </div>
+
+
+</section>
+
+
 
 
 
@@ -868,10 +1544,13 @@ text-muted-foreground
 
 
 
-<div>
+<section className="pb-20">
 
 
-<h2 className="text-3xl font-bold mb-8">
+<div className="container max-w-5xl">
+
+
+<h2 className="text-3xl font-bold mb-10">
 
 Development Timeline
 
@@ -879,38 +1558,77 @@ Development Timeline
 
 
 
-<div className="space-y-5">
+
+<div className="space-y-6">
 
 
-{project.timeline?.map((item,index)=>(
+{project.timeline.map((item,index)=>(
 
 
 <div
+
 key={item}
+
 className="
 flex
 items-center
-gap-5
+gap-6
 "
+
 >
 
 
-<div className="
-h-10
-w-10
+<div
+
+className="
+w-12
+h-12
 rounded-full
-bg-accent/10
-text-accent
 flex
 items-center
 justify-center
 font-bold
-">
+border
+"
+
+style={{
+
+color:theme.accent,
+
+borderColor:theme.accent,
+
+background:"rgba(36,47,73,.5)"
+
+}}
+
+>
 
 {index+1}
 
 </div>
 
+
+
+
+<div
+
+className="
+flex-1
+rounded-2xl
+border
+px-6
+py-4
+"
+
+style={{
+
+background:"rgba(36,47,73,.45)",
+
+borderColor:"#2D3650"
+
+}}
+
+>
 
 
 <p>
@@ -923,13 +1641,25 @@ font-bold
 </div>
 
 
+
+</div>
+
+
+
 ))}
 
 
+
 </div>
 
 
+
 </div>
+
+
+
+</section>
+
 
 
 
@@ -942,7 +1672,10 @@ font-bold
 
 
 
-<div>
+<section className="pb-20">
+
+
+<div className="container max-w-5xl">
 
 
 <h2 className="text-3xl font-bold mb-8">
@@ -953,86 +1686,171 @@ Lessons Learned
 
 
 
+
+
 <div className="
 grid
 md:grid-cols-3
-gap-5
+gap-6
 ">
 
 
-{project.lessons?.map((item)=>(
+
+{project.lessons.map(item=>(
+
 
 
 <div
+
 key={item}
+
 className="
-rounded-xl
+rounded-3xl
 border
-border-border
 p-6
 "
+
+style={{
+
+background:"rgba(36,47,73,.5)",
+
+borderColor:"#2D3650"
+
+}}
+
 >
 
 
 <Lightbulb
-className="
-text-accent
-mb-4
-"
+
+className="mb-5"
+
+style={{
+
+color:theme.accent
+
+}}
+
 />
 
 
-<p className="
-text-muted-foreground
-">
+
+<p className="text-muted-foreground">
 
 {item}
 
 </p>
 
 
-</div>
 
+</div>
 
 
 ))}
 
 
-</div>
-
 
 </div>
 
 
+</div>
+
+
+</section>
 
 
 
 
 
 
-{/* IMPROVEMENTS */}
 
 
 
-<div>
+{/* FUTURE IMPROVEMENTS */}
 
 
-<h2 className="text-3xl font-bold mb-6">
+
+<section className="pb-24">
+
+
+<div className="container max-w-5xl">
+
+
+
+<div
+
+className="
+rounded-3xl
+border
+p-10
+relative
+overflow-hidden
+"
+
+style={{
+
+background:
+`linear-gradient(
+135deg,
+rgba(36,47,73,.8),
+rgba(11,14,22,.9)
+)`,
+
+borderColor:theme.accent
+
+}}
+
+>
+
+
+
+<div
+
+className="
+absolute
+right-0
+top-0
+w-72
+h-72
+blur-3xl
+opacity-20
+"
+
+style={{
+
+background:theme.accent
+
+}}
+
+/>
+
+
+
+
+
+<h2 className="text-3xl font-bold mb-6 relative">
 
 Future Improvements
 
 </h2>
 
 
-<p className="
-text-muted-foreground
-leading-relaxed
+
+<p
+
+className="
+relative
 whitespace-pre-wrap
-">
+leading-relaxed
+text-muted-foreground
+"
+
+>
 
 {project.improvements}
 
 </p>
+
 
 
 </div>
@@ -1044,6 +1862,89 @@ whitespace-pre-wrap
 
 
 </section>
+
+
+
+
+
+
+
+
+
+{/* PROJECT END */}
+
+
+
+<section className="pb-32">
+
+
+<div className="container text-center">
+
+
+
+<div
+
+className="
+inline-flex
+items-center
+gap-3
+rounded-full
+px-6
+py-3
+border
+"
+
+style={{
+
+borderColor:theme.accent,
+
+color:theme.accent
+
+}}
+
+>
+
+
+<ThemeIcon size={18}/>
+
+
+<span className="font-mono text-sm">
+
+Project Completed
+
+</span>
+
+
+</div>
+
+
+
+<h2 className="text-4xl font-bold mt-8">
+
+Building better systems through engineering
+
+</h2>
+
+
+
+<p className="mt-4 text-muted-foreground">
+
+Secure architecture, thoughtful design,
+and continuous improvement.
+
+</p>
+
+
+
+</div>
+
+
+</section>
+
+
+
 </Layout>
+
 );
+
 }

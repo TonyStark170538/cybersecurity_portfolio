@@ -53,23 +53,8 @@ description:
 const projects = [
 
 {
-title:"J.A.R.V.I.S. Cybersecurity Platform",
-badge:"Featured Security Project",
-description:
-"A futuristic SOC-inspired platform focused on threat intelligence, monitoring, incident response, and security automation.",
-tags:[
-"Cybersecurity",
-"React",
-"TypeScript",
-"SOC"
-],
-href:"/projects/1"
-},
-
-
-{
 title:"AI Portfolio Terminal",
-badge:"AI Engineering",
+badge:"Featured AI Project",
 description:
 "An AI-powered financial intelligence platform combining data analysis, visualization, and intelligent workflows.",
 tags:[
@@ -77,6 +62,21 @@ tags:[
 "Python",
 "Data Engineering",
 "React"
+],
+href:"/projects/1"
+},
+
+
+{
+title:"J.A.R.V.I.S. Cybersecurity Platform",
+badge:"Security Platform",
+description:
+"A futuristic SOC-inspired platform focused on threat intelligence, monitoring, incident response, and security automation.",
+tags:[
+"Cybersecurity",
+"React",
+"TypeScript",
+"SOC"
 ],
 href:"/projects/2"
 },
@@ -1089,19 +1089,14 @@ transition
 
 <div className="
 relative
-
 rounded-3xl
-
 bg-[#161E3F]/40
-
 backdrop-blur-xl
-
 p-8
-
 min-h-[360px]
-
+flex
+flex-col
 hover:bg-[#242F49]/60
-
 transition
 ">
 
@@ -1220,26 +1215,20 @@ text-[#A8B2D1]
 
 
 <div className="
-absolute
-
-bottom-8
-
+mt-auto
+pt-8
 flex
-
 items-center
-
 gap-2
-
 text-[#E4B95E]
-
 text-sm
+group-hover:gap-3
+transition-all
 ">
-
 
 View Project
 
 <ArrowRight size={16}/>
-
 
 </div>
 

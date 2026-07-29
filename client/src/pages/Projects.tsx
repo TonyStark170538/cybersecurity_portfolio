@@ -1,425 +1,274 @@
 import { Link } from "wouter";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
-
-/**
- * Projects Page
- *
- * Displays all portfolio projects.
- * Each project links to its case study page.
- */
 
 export default function Projects() {
 
   const projects = [
-
     {
-      id:1,
-
-      title:"AI Portfolio Terminal",
-
+      id: 1,
+      title: "AI Portfolio Terminal",
       description:
-      "An AI-powered financial intelligence platform combining data visualization, analytics workflows, and intelligent software design.",
-
-      tags:[
+        "An AI-powered financial intelligence platform combining data visualization, analytics workflows, and intelligent software design.",
+      tags: [
         "React",
         "TypeScript",
         "Python",
         "AI",
-        "Data Engineering"
+        "Data Engineering",
       ],
-
-      metrics:[
+      metrics: [
         "AI Workflow",
         "Data Processing",
-        "Visualization"
+        "Visualization",
       ],
-
-      href:"/projects/1",
-
-      featured:true,
+      href: "/projects/1",
+      featured: true,
     },
 
-
     {
-      id:2,
-
-      title:"J.A.R.V.I.S. Cybersecurity Platform",
-
+      id: 2,
+      title: "J.A.R.V.I.S. Cybersecurity Platform",
       description:
-      "A Security Operations Center inspired cybersecurity dashboard focused on monitoring, threat intelligence, and incident response workflows.",
-
-      tags:[
+        "A Security Operations Center inspired cybersecurity dashboard focused on monitoring, threat intelligence, and incident response workflows.",
+      tags: [
         "React",
         "TypeScript",
         "Cybersecurity",
-        "SOC"
+        "SOC",
       ],
-
-      metrics:[
+      metrics: [
         "8 Security Modules",
         "Threat Intelligence",
-        "Incident Response"
+        "Incident Response",
       ],
-
-      href:"/projects/2",
-
-      featured:false,
+      href: "/projects/2",
+      featured: false,
     },
-
 
     {
-      id:3,
-
-      title:"Pink Panther",
-
+      id: 3,
+      title: "Pink Panther",
       description:
-      "A premium frontend project focused on branding, design systems, animations, and modern user experience.",
-
-      tags:[
+        "A premium frontend project focused on branding, design systems, animations, and modern user experience.",
+      tags: [
         "React",
         "Tailwind",
-        "UI/UX"
+        "UI/UX",
       ],
-
-      metrics:[
+      metrics: [
         "Design System",
         "Responsive UI",
-        "Frontend Architecture"
+        "Frontend Architecture",
       ],
-
-      href:"/projects/3",
-
-      featured:false,
+      href: "/projects/3",
+      featured: false,
     },
-
   ];
 
-
-
   return (
-
     <Layout>
 
+      {/* HERO */}
 
-      {/* Header */}
+      <section className="relative overflow-hidden py-32">
 
-      <section className="py-16 border-b border-border">
+        <div className="absolute right-0 top-0 h-[650px] w-[650px] bg-[radial-gradient(circle,rgba(181,26,43,.22),transparent_65%)] blur-3xl" />
 
-        <div className="container space-y-4">
+        <div className="absolute left-0 bottom-0 h-[500px] w-[500px] bg-[radial-gradient(circle,rgba(214,165,68,.08),transparent_70%)] blur-3xl" />
 
+        <div className="container">
 
-          <p className="text-accent font-mono text-sm font-medium">
+          <div className="max-w-4xl">
 
-            Portfolio
+            <p className="mb-5 font-mono text-sm uppercase tracking-[0.3em] text-[#E4B95E]">
+              Engineering Portfolio
+            </p>
 
-          </p>
+            <h1 className="text-5xl font-bold leading-tight md:text-6xl">
+              Selected
+              <span className="text-[#E4B95E]"> Projects</span>
+            </h1>
 
+            <p className="mt-8 max-w-3xl text-lg leading-relaxed text-[#A8B2D1]">
+              A collection of software engineering, cybersecurity,
+              cloud and AI projects focused on clean architecture,
+              premium user experiences and secure system design.
+            </p>
 
-
-          <h1 className="text-5xl font-bold">
-
-            Selected Projects
-
-          </h1>
-
-
-
-
-          <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-
-            A collection of projects exploring secure software
-            engineering, cybersecurity, artificial intelligence,
-            and modern frontend development. Each case study
-            explains the problem, architecture, engineering
-            decisions, and lessons learned.
-
-          </p>
-
+          </div>
 
         </div>
 
       </section>
 
+      {/* PROJECTS */}
 
-
-
-
-      {/* Project Cards */}
-
-
-      <section className="py-20">
-
+      <section className="pb-24">
 
         <div className="container">
 
+          <div className="grid gap-8 lg:grid-cols-2">
 
-          <div className="grid md:grid-cols-2 gap-8">
-
-
-
-            {projects.map((project)=>(
-
+            {projects.map((project) => (
 
               <Link
                 key={project.id}
                 href={project.href}
               >
 
-
                 <span
-
                   className={`
                   group
-                  flex
-                  flex-col
-                  h-full
-                  rounded-xl
-                  border
+                  relative
+                  block
+                  overflow-hidden
+                  rounded-[32px]
                   cursor-pointer
-                  p-8
                   transition-all
+                  duration-500
 
                   ${
                     project.featured
-                    ?
-                    "md:col-span-2 border-accent/50 bg-secondary/40 hover:border-accent"
-                    :
-                    "border-border hover:border-accent/50 hover:bg-secondary/50"
+                      ? "lg:col-span-2"
+                      : ""
                   }
-
                   `}
-
                 >
 
+                  {/* Reactor Glow */}
 
+                  <div className="
+                  absolute
+                  inset-0
+                  rounded-[32px]
+                  bg-[#B51A2B]
+                  opacity-0
+                  blur-3xl
+                  transition-all
+                  duration-500
+                  group-hover:opacity-10
+                  " />
 
+                  {/* Card */}
 
-                  {/* Featured Badge */}
+                  <div className="
+                  relative
+                  h-full
+                  rounded-[32px]
+                  bg-[#161E3F]/55
+                  backdrop-blur-xl
+                  p-9
+                  transition-all
+                  duration-500
+                  group-hover:-translate-y-1
+                  group-hover:bg-[#242F49]/70
+                  ">
 
+                    {project.featured && (
 
-                  {project.featured && (
+                      <div className="mb-8 flex items-center gap-2">
 
-                    <span
+                        <div className="rounded-full bg-[#D6A544]/15 px-4 py-2 text-xs font-medium uppercase tracking-widest text-[#E4B95E]">
+                          Featured Project
+                        </div>
 
-                      className="
-                      mb-5
-                      w-fit
-                      rounded-full
-                      bg-accent/10
-                      px-3
-                      py-1
-                      text-xs
-                      font-medium
-                      text-accent
-                      "
-
-                    >
-
-                      Featured Project
-
-                    </span>
-
-                  )}
-
-
-
-
-
-
-                  {/* Title */}
-
-
-                  <h2
-
-                    className="
-                    text-2xl
-                    font-bold
-                    group-hover:text-accent
-                    transition-colors
-                    "
-
-                  >
-
-                    {project.title}
-
-                  </h2>
-
-
-
-
-
-
-
-                  {/* Description */}
-
-
-                  <p
-
-                    className="
-                    mt-4
-                    max-w-3xl
-                    text-sm
-                    leading-relaxed
-                    text-muted-foreground
-                    "
-
-                  >
-
-                    {project.description}
-
-                  </p>
-
-
-
-
-
-
-
-                  {/* Metrics */}
-
-
-                  <div className="mt-6 space-y-2">
-
-
-                    {project.metrics.map((metric)=>(
-
-
-                      <div
-
-                        key={metric}
-
-                        className="
-                        flex
-                        items-center
-                        gap-2
-                        text-sm
-                        text-muted-foreground
-                        "
-
-                      >
-
-
-                        <span className="text-accent">
-
-                          ✓
-
-                        </span>
-
-
-                        {metric}
-
+                        <Sparkles
+                          size={16}
+                          className="text-[#D6A544]"
+                        />
 
                       </div>
 
+                    )}
 
-                    ))}
+                    <h2 className="text-3xl font-bold transition group-hover:text-[#E4B95E]">
+                      {project.title}
+                    </h2>
 
+                    <p className="mt-5 max-w-3xl leading-8 text-[#A8B2D1]">
+                      {project.description}
+                    </p>
 
-                  </div>
+                    <div className="mt-8 grid gap-3">
 
+                      {project.metrics.map(metric => (
 
+                        <div
+                          key={metric}
+                          className="flex items-center gap-3 text-[#A8B2D1]"
+                        >
 
+                          <div className="
+                          h-2
+                          w-2
+                          rounded-full
+                          bg-[#D6A544]
+                          shadow-[0_0_12px_rgba(214,165,68,.45)]
+                          " />
 
+                          {metric}
 
+                        </div>
 
+                      ))}
 
+                    </div>
 
-                  {/* Tags */}
+                    <div className="mt-8 flex flex-wrap gap-3">
 
+                      {project.tags.map(tag => (
 
-                  <div className="mt-6 flex flex-wrap gap-2">
+                        <span
+                          key={tag}
+                          className="
+                          rounded-full
+                          bg-[#0B0E16]
+                          px-4
+                          py-2
+                          text-xs
+                          text-[#A8B2D1]
+                          "
+                        >
+                          {tag}
+                        </span>
 
+                      ))}
 
-                    {project.tags.map((tag)=>(
+                    </div>
 
-
-                      <span
-
-                        key={tag}
-
-                        className="
-                        rounded
-                        bg-secondary
-                        px-3
-                        py-1
-                        text-xs
-                        text-muted-foreground
-                        "
-
-                      >
-
-                        {tag}
-
-                      </span>
-
-
-                    ))}
-
-
-                  </div>
-
-
-
-
-
-
-
-                  {/* Button */}
-
-
-                  <div
-
-                    className="
-                    mt-auto
-                    pt-8
+                    <div className="
+                    mt-10
                     flex
                     items-center
                     gap-2
-                    text-sm
                     font-medium
-                    text-accent
-                    group-hover:gap-3
+                    text-[#E4B95E]
                     transition-all
-                    "
+                    group-hover:gap-4
+                    ">
 
-                  >
+                      Read Case Study
 
-                    Read Case Study
+                      <ArrowRight size={18} />
 
-                    <ArrowRight size={16}/>
-
+                    </div>
 
                   </div>
 
-
-
-
-
                 </span>
-
 
               </Link>
 
-
-
             ))}
-
-
 
           </div>
 
-
-
         </div>
-
 
       </section>
 
-
-
     </Layout>
-
   );
 
 }
