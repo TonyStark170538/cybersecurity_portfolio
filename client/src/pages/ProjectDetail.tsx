@@ -9,6 +9,14 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import Layout from "@/components/Layout";
+import jarvis from "@/images/jarvis.png";
+import jarvisDiagram from "@/images/jarvisdiagram.png";
+
+import terminal from "@/images/terminal.png";
+import terminalDiagram from "@/images/terminaldiagram.png";
+
+import pink from "@/images/pink.png";
+import pinkDiagram from "@/images/pinkdiagram.png";
 
 /**
  * ProjectDetail page
@@ -33,6 +41,8 @@ export default function ProjectDetail() {
 id:1,
 
 title:"AI Portfolio Terminal",
+image: terminal,
+diagram: terminalDiagram,
 
 subtitle:
 "An AI-powered financial intelligence platform combining data analysis, risk simulation, and intelligent software design.",
@@ -153,6 +163,8 @@ Future improvements:
 id:2,
 
 title:"J.A.R.V.I.S. Cybersecurity Platform",
+image: jarvis,
+diagram: jarvisDiagram,
 
 subtitle:
 "A Security Operations Center dashboard focused on monitoring, threat intelligence, and incident response.",
@@ -265,6 +277,8 @@ Future improvements:
 id:3,
 
 title:"Pink Panther",
+image: pink,
+diagram: pinkDiagram,
 
 subtitle:
 "A premium frontend project focused on branding, design systems, and user experience.",
@@ -434,6 +448,22 @@ Future improvements:
           <p className="text-xl text-muted-foreground max-w-3xl">
             {project.subtitle}
           </p>
+
+          <section className="py-16 border-b border-border">
+            <div className="container">
+
+              <div className="overflow-hidden rounded-xl border border-border shadow-xl">
+
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full object-cover"
+                />
+
+              </div>
+
+            </div>
+          </section>
 
 
 
@@ -647,11 +677,18 @@ mt-2
 <div>
 
 
-<h2 className="text-3xl font-bold mb-8">
+<div className="space-y-8">
+  <div className="overflow-hidden rounded-xl border border-border bg-secondary/20 p-6">
 
-Architecture
+    <img
+      src={project.diagram}
+      alt="Architecture Diagram"
+      className="w-full rounded-lg"
+    />
 
-</h2>
+  </div>
+
+</div>
 
 
 
@@ -1007,52 +1044,6 @@ whitespace-pre-wrap
 
 
 </section>
-
-      {/* CTA */}
-
-      <section className="border-t border-border py-12">
-
-        <div className="container">
-
-          <p className="
-            text-muted-foreground
-            mb-6
-          ">
-
-            Interested in my engineering approach?
-
-          </p>
-
-
-          <Link href="/contact">
-
-            <span
-              className="
-              inline-flex
-              px-6
-              py-3
-              rounded-md
-              bg-accent
-              text-accent-foreground
-              font-medium
-              cursor-pointer
-              hover:opacity-90
-              transition
-              "
-            >
-
-              Get in Touch
-
-            </span>
-
-          </Link>
-
-
-        </div>
-
-      </section>
-
-
-    </Layout>
-  );
+</Layout>
+);
 }

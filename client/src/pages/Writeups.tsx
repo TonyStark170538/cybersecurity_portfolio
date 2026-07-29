@@ -28,9 +28,7 @@ tags:[
 "XSS"
 ],
 
-article:
-
-`
+article:`
 Cross-Site Scripting (XSS) is one of the most common web application vulnerabilities.
 
 The vulnerability happens when an attacker is able to inject malicious JavaScript into a page viewed by another user.
@@ -53,6 +51,7 @@ Security approach:
 3. Sanitize external content.
 
 4. Understand where user-controlled data flows.
+
 
 The main lesson is that frameworks provide protection,
 but secure development still requires understanding how attacks work.
@@ -78,9 +77,7 @@ tags:[
 "Security"
 ],
 
-article:
-
-`
+article:`
 Capture The Flag challenges are useful because they teach attackers' thinking.
 
 A common mistake is immediately trying exploits.
@@ -132,9 +129,7 @@ tags:[
 "Encryption"
 ],
 
-article:
-
-`
+article:`
 Encryption protects information by transforming readable data into unreadable ciphertext.
 
 AES:
@@ -193,9 +188,7 @@ tags:[
 "Web Security"
 ],
 
-article:
-
-`
+article:`
 The OWASP Top 10 represents common security risks found in applications.
 
 Important examples:
@@ -240,9 +233,7 @@ tags:[
 "Database Security"
 ],
 
-article:
-
-`
+article:`
 SQL Injection happens when user input is directly combined with database queries.
 
 Example problem:
@@ -282,9 +273,7 @@ tags:[
 "Backend"
 ],
 
-article:
-
-`
+article:`
 APIs are common attack targets because they expose application functionality.
 
 Security principles:
@@ -321,36 +310,101 @@ it is designed with misuse in mind.
 
 
 
-
 return (
 
 <Layout>
 
 
-<section className="py-16 border-b border-border">
-
-<div className="container space-y-4">
+{/* HERO */}
 
 
-<p className="text-accent font-mono text-sm">
+<section className="
+relative
+overflow-hidden
+py-32
+">
+
+
+<div className="
+absolute
+top-0
+right-0
+
+w-[650px]
+h-[650px]
+
+bg-[radial-gradient(circle,rgba(181,26,43,.22),transparent_65%)]
+
+blur-3xl
+"
+/>
+
+
+
+<div className="container">
+
+
+<div className="max-w-4xl">
+
+
+<p className="
+text-[#E4B95E]
+
+font-mono
+
+text-sm
+
+tracking-widest
+
+uppercase
+
+mb-6
+">
+
 Knowledge Base
+
 </p>
 
 
-<h1 className="text-5xl font-bold">
+
+<h1 className="
+text-5xl
+
+md:text-6xl
+
+font-bold
+">
+
 Writeups & Notes
+
 </h1>
 
 
-<p className="text-lg text-muted-foreground max-w-3xl">
 
-Technical security articles, research notes,
-and lessons learned from building secure systems.
+
+<p className="
+mt-6
+
+text-lg
+
+text-[#A8B2D1]
+
+leading-relaxed
+
+max-w-3xl
+">
+
+Technical security research, vulnerability analysis,
+and engineering notes from building secure systems.
 
 </p>
 
 
 </div>
+
+
+</div>
+
 
 </section>
 
@@ -358,12 +412,33 @@ and lessons learned from building secure systems.
 
 
 
-<section className="py-20">
-
-<div className="container max-w-3xl space-y-6">
 
 
-{writeups.map((writeup)=>(
+
+{/* ARTICLES */}
+
+
+<section className="
+py-20
+">
+
+
+<div className="
+container
+
+max-w-5xl
+">
+
+
+<div className="
+grid
+
+gap-8
+">
+
+
+{
+writeups.map(writeup=>(
 
 
 <button
@@ -373,32 +448,102 @@ key={writeup.id}
 onClick={()=>setSelected(writeup)}
 
 className="
-w-full
-text-left
 group
-p-6
-rounded-xl
-border
-border-border
-hover:border-accent/50
-hover:bg-secondary/50
-transition
-"
 
+relative
+
+text-left
+
+cursor-pointer
+
+w-full
+"
 
 >
 
 
-<div className="flex justify-between gap-4">
+<div className="
+absolute
+
+inset-0
+
+rounded-3xl
+
+bg-[#B51A2B]
+
+opacity-0
+
+blur-3xl
+
+group-hover:opacity-10
+
+transition
+"
+/>
+
+
+
+
+
+<div className="
+relative
+
+rounded-3xl
+
+bg-[#161E3F]/50
+
+backdrop-blur-xl
+
+p-8
+
+hover:bg-[#242F49]/60
+
+transition
+">
+
+
+
+<div className="
+flex
+
+justify-between
+
+gap-8
+">
 
 
 <div>
 
 
+<p className="
+text-xs
+
+font-mono
+
+tracking-widest
+
+uppercase
+
+text-[#D6A544]
+
+mb-5
+">
+
+Security Research
+
+</p>
+
+
+
+
 <h2 className="
+text-2xl
+
 font-bold
-text-lg
-group-hover:text-accent
+
+group-hover:text-[#E4B95E]
+
+transition
 ">
 
 {writeup.title}
@@ -406,10 +551,14 @@ group-hover:text-accent
 </h2>
 
 
+
+
 <p className="
-mt-3
-text-sm
-text-muted-foreground
+mt-4
+
+text-[#A8B2D1]
+
+leading-relaxed
 ">
 
 {writeup.summary}
@@ -422,11 +571,17 @@ text-muted-foreground
 
 
 <ArrowRight
-size={20}
+
 className="
-text-muted-foreground
-group-hover:text-accent
+text-[#D6A544]
+
+group-hover:text-[#B51A2B]
+
+transition
+
+mt-2
 "
+
 />
 
 
@@ -435,28 +590,49 @@ group-hover:text-accent
 
 
 
-<div className="flex flex-wrap gap-2 mt-5">
 
 
-{writeup.tags.map(tag=>(
+<div className="
+flex
+
+flex-wrap
+
+gap-3
+
+mt-8
+">
+
+
+{
+writeup.tags.map(tag=>(
+
 
 <span
+
 key={tag}
+
 className="
-px-2
+px-3
+
 py-1
-rounded
-bg-secondary
+
+rounded-full
+
+bg-[#0B0E16]
+
 text-xs
-text-muted-foreground
-"
->
+
+text-[#A8B2D1]
+">
 
 {tag}
 
 </span>
 
-))}
+
+))
+
+}
 
 
 </div>
@@ -464,13 +640,22 @@ text-muted-foreground
 
 
 
+
+
 <div className="
-mt-4
 flex
+
 items-center
+
 gap-2
+
+mt-6
+
 text-xs
-text-muted-foreground
+
+font-mono
+
+text-[#6E7897]
 ">
 
 <Calendar size={14}/>
@@ -481,13 +666,23 @@ text-muted-foreground
 
 
 
+
+</div>
+
+
 </button>
 
 
-))}
+))
+
+}
 
 
 </div>
+
+
+</div>
+
 
 </section>
 
@@ -496,35 +691,63 @@ text-muted-foreground
 
 
 
-{selected && (
 
-<div
-className="
+
+{/* ARTICLE MODAL */}
+
+
+
+{
+selected && (
+
+
+<div className="
 fixed
+
 inset-0
-bg-black/70
-flex
-items-center
-justify-center
-p-6
+
 z-50
-"
->
+
+flex
+
+items-center
+
+justify-center
+
+p-6
+
+bg-black/70
+
+backdrop-blur-md
+">
 
 
-<div
-className="
-bg-background
-border
-border-border
-rounded-xl
-max-w-3xl
-max-h-[85vh]
-overflow-y-auto
-p-8
+<div className="
 relative
-"
->
+
+max-w-4xl
+
+max-h-[85vh]
+
+overflow-y-auto
+
+w-full
+
+
+rounded-3xl
+
+
+bg-[#101522]/95
+
+
+p-8
+
+md:p-12
+
+
+shadow-[0_0_80px_rgba(181,26,43,.25)]
+">
+
 
 
 <button
@@ -533,13 +756,17 @@ onClick={()=>setSelected(null)}
 
 className="
 absolute
-right-5
-top-5
-text-muted-foreground
-hover:text-accent
-"
 
->
+right-6
+
+top-6
+
+text-[#A8B2D1]
+
+hover:text-[#E4B95E]
+
+transition
+">
 
 <X size={22}/>
 
@@ -547,7 +774,35 @@ hover:text-accent
 
 
 
-<h2 className="text-3xl font-bold mb-4">
+
+<p className="
+text-[#D6A544]
+
+font-mono
+
+text-xs
+
+uppercase
+
+tracking-widest
+
+mb-6
+">
+
+Security Article
+
+</p>
+
+
+
+
+<h2 className="
+text-3xl
+
+md:text-4xl
+
+font-bold
+">
 
 {selected.title}
 
@@ -555,22 +810,57 @@ hover:text-accent
 
 
 
-<p className="
+
+<div className="
+flex
+
+items-center
+
+gap-2
+
+mt-5
+
 text-sm
-text-muted-foreground
-mb-6
+
+font-mono
+
+text-[#6E7897]
 ">
+
+<Calendar size={15}/>
 
 {selected.date}
 
-</p>
+</div>
+
+
+
+
+
+<div className="
+my-8
+
+h-px
+
+bg-gradient-to-r
+
+from-[#D6A544]
+
+via-[#B51A2B]
+
+to-transparent
+"
+/>
+
 
 
 
 <p className="
 whitespace-pre-wrap
-leading-relaxed
-text-muted-foreground
+
+leading-[1.9]
+
+text-[#A8B2D1]
 ">
 
 {selected.article}
@@ -584,7 +874,10 @@ text-muted-foreground
 
 </div>
 
-)}
+
+)
+
+}
 
 
 

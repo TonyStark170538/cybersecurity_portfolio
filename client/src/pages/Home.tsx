@@ -1,4 +1,6 @@
+
 import { Link } from "wouter";
+
 import {
   ArrowRight,
   Github,
@@ -7,40 +9,49 @@ import {
   Brain,
   Code2,
   Shield,
-  Container,
   Cpu,
-  Database,
   Lock,
   FileText,
 } from "lucide-react";
 
 import Layout from "@/components/Layout";
 
+
+
 export default function Home() {
 
+
 const focusAreas = [
+
 {
 title:"Security Engineering",
 icon:Shield,
 description:
 "Designing secure applications through threat modeling, secure architecture, vulnerability awareness, and defensive engineering."
 },
+
 {
 title:"Cloud Infrastructure",
 icon:Cloud,
 description:
 "Building and exploring cloud-native systems with AWS, Google Cloud, Docker, and modern deployment practices."
 },
+
 {
 title:"AI Systems",
 icon:Brain,
 description:
 "Creating intelligent applications by combining AI workflows, data processing, and modern software engineering."
 }
+
 ];
 
 
+
+
+
 const projects = [
+
 {
 title:"J.A.R.V.I.S. Cybersecurity Platform",
 badge:"Featured Security Project",
@@ -54,6 +65,7 @@ tags:[
 ],
 href:"/projects/1"
 },
+
 
 {
 title:"AI Portfolio Terminal",
@@ -69,6 +81,7 @@ tags:[
 href:"/projects/2"
 },
 
+
 {
 title:"Pink Panther",
 badge:"Frontend Engineering",
@@ -81,10 +94,16 @@ tags:[
 ],
 href:"/projects/3"
 }
+
 ];
 
 
+
+
+
+
 const technologies = [
+
 {
 title:"Application Development",
 icon:Code2,
@@ -95,6 +114,7 @@ items:[
 "APIs"
 ]
 },
+
 
 {
 title:"Security Engineering",
@@ -107,6 +127,7 @@ items:[
 ]
 },
 
+
 {
 title:"Cloud & DevOps",
 icon:Cloud,
@@ -118,6 +139,7 @@ items:[
 ]
 },
 
+
 {
 title:"AI Systems",
 icon:Cpu,
@@ -128,33 +150,49 @@ items:[
 "MLOps"
 ]
 }
+
 ];
 
 
+
+
+
 const writeups = [
+
 {
 title:"Understanding XSS Vulnerabilities",
 tag:"Web Security"
 },
+
 {
 title:"OWASP Top 10 Security Analysis",
 tag:"Application Security"
 },
+
 {
 title:"AES vs RSA Cryptography Basics",
 tag:"Cryptography"
 }
+
 ];
 
 
+
+
+
 const learning = [
+
 "AWS Cloud",
 "Google Cloud",
 "Cloud Security",
 "AI Engineering",
 "Docker",
 "MLOps"
+
 ];
+
+
+
 
 
 return (
@@ -164,62 +202,157 @@ return (
 
 {/* HERO */}
 
-<section className="py-24 border-b border-border">
+
+<section className="
+relative
+overflow-hidden
+py-32
+">
+
+
+<div className="
+absolute
+top-0
+right-0
+
+w-[700px]
+h-[700px]
+
+bg-[radial-gradient(circle,rgba(181,26,43,.22),transparent_65%)]
+
+blur-3xl
+
+pointer-events-none
+"/>
+
+
+<div className="
+absolute
+bottom-0
+left-0
+
+w-[500px]
+h-[500px]
+
+bg-[radial-gradient(circle,rgba(214,165,68,.10),transparent_70%)]
+
+blur-3xl
+"/>
+
+
+
 
 <div className="container">
 
-<div className="grid lg:grid-cols-2 gap-16 items-center">
+
+<div className="
+grid
+lg:grid-cols-2
+gap-16
+items-center
+">
+
+
+
 
 
 <div className="space-y-8">
 
 
-<p className="text-accent font-mono text-sm tracking-widest uppercase">
+
+<p className="
+text-accent
+font-mono
+text-sm
+tracking-widest
+uppercase
+">
+
 Software Engineer • Security • Cloud • AI
+
 </p>
 
 
-<h1 className="text-5xl md:text-6xl font-bold leading-tight">
+
+
+
+<h1 className="
+text-5xl
+md:text-7xl
+font-bold
+leading-tight
+">
+
 
 Building secure software systems powered by
 
-<span className="text-accent">
-{" "}cloud, AI, and modern engineering
+
+<span className="
+text-[#D6A544]
+">
+
+cloud, AI, and modern engineering
+
 </span>
+
 
 </h1>
 
 
-<p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
+
+
+
+<p className="
+text-lg
+text-muted-foreground
+max-w-xl
+leading-relaxed
+">
+
 
 I'm Toni, a software engineering student focused on
 cybersecurity, cloud infrastructure, and AI-powered applications.
 
+
 <br/><br/>
+
 
 I build projects that combine secure architecture,
 clean user experiences, and engineering practices inspired
 by real-world security teams.
 
+
 </p>
 
 
 
-<div className="flex flex-wrap gap-4">
+
+
+
+<div className="
+flex
+flex-wrap
+gap-5
+">
+
 
 
 <Link href="/projects">
 
+
 <span className="
+stark-button
+
 inline-flex
+
 items-center
-gap-2
-px-6
+
+gap-3
+
+px-7
+
 py-3
-rounded-md
-bg-accent
-text-accent-foreground
-font-medium
+
 cursor-pointer
 ">
 
@@ -229,20 +362,38 @@ View Projects
 
 </span>
 
+
 </Link>
+
+
+
 
 
 <a
 href="/cv.pdf"
+
 className="
 inline-flex
+
 items-center
-px-6
+
+px-7
+
 py-3
-rounded-md
+
+rounded-full
+
 border
+
 border-border
-hover:bg-secondary
+
+text-muted-foreground
+
+hover:text-white
+
+hover:border-[#D6A544]
+
+transition
 "
 >
 
@@ -251,37 +402,93 @@ Download CV
 </a>
 
 
-</div>
 
 
 </div>
 
 
 
-{/* SYSTEM STATUS */}
+</div>
 
-<div className="hidden lg:flex justify-center">
+
+
+
+
+
+
+
+{/* SECURITY STATUS - ORIGINAL VERSION */}
+
+
+
+<div className="
+hidden
+
+lg:flex
+
+justify-center
+">
 
 
 <div className="
 w-80
+
 rounded-xl
+
 border
+
 border-border
+
 bg-secondary/30
+
 p-6
+
+backdrop-blur-sm
 ">
 
 
-<div className="flex justify-between mb-6">
 
-<p className="font-mono text-sm text-accent">
+<div className="
+flex
+
+justify-between
+
+mb-6
+">
+
+
+<p className="
+font-mono
+
+text-sm
+
+text-accent
+">
+
 SECURITY STATUS
+
 </p>
 
-<span className="h-3 w-3 rounded-full bg-accent"/>
+
+
+
+<span className="
+h-3
+
+w-3
+
+rounded-full
+
+bg-accent
+
+shadow-[0_0_15px_rgba(214,165,68,.7)]
+"/>
+
+
 
 </div>
+
+
 
 
 
@@ -292,11 +499,14 @@ icon={Cloud}
 />
 
 
+
 <Status
 label="Security"
 value="Active"
 icon={Shield}
 />
+
+
 
 
 <Status
@@ -306,6 +516,9 @@ icon={Brain}
 />
 
 
+
+
+
 <Status
 label="Projects"
 value="3 Active"
@@ -313,236 +526,232 @@ icon={Code2}
 />
 
 
+
+
+
+</div>
+
+
+</div>
+
+
+
+
 </div>
 
 
 </div>
 
-
-</div>
-
-</div>
 
 </section>
-
-
 
 
 {/* SECURITY PROFILE */}
 
-<section className="py-20 border-b border-border">
 
-<div className="container">
-
-
-<p className="text-accent font-mono text-sm mb-4">
-Security Profile
-</p>
-
-
-<h2 className="text-4xl font-bold mb-10">
-How I Build
-</h2>
-
-
-<div className="grid md:grid-cols-4 gap-6">
-
-
-{
-[
-["Threat Modeling","Thinking like an attacker before writing code."],
-["Secure Architecture","Designing systems with security from the beginning."],
-["Application Security","Understanding vulnerabilities and defenses."],
-["Continuous Learning","Following new technologies and threats."]
-].map(item=>(
-
-<div
-key={item[0]}
-className="
-border
-border-border
-rounded-xl
-p-6
-"
->
-
-<Lock className="text-accent mb-4"/>
-
-<h3 className="font-bold mb-3">
-{item[0]}
-</h3>
-
-<p className="text-sm text-muted-foreground">
-{item[1]}
-</p>
-
-
-</div>
-
-))
-}
-
-
-</div>
-
-</div>
-
-</section>
-
-
-
-
-
-{/* FOCUS */}
-
-
-<section className="py-20">
-
-<div className="container">
-
-
-<h2 className="text-4xl font-bold mb-10">
-Engineering Interests
-</h2>
-
-
-<div className="grid md:grid-cols-3 gap-6">
-
-
-{
-focusAreas.map(item=>{
-
-const Icon=item.icon;
-
-return (
-
-<div
-key={item.title}
-className="
-border
-border-border
-rounded-xl
-p-6
-"
->
-
-<Icon className="text-accent mb-5"/>
-
-<h3 className="text-xl font-semibold mb-3">
-{item.title}
-</h3>
-
-
-<p className="text-muted-foreground">
-{item.description}
-</p>
-
-
-</div>
-
-)
-
-})
-}
-
-
-</div>
-
-</div>
-
-</section>
-
-
-
-
-
-{/* PROJECTS */}
-
-
-<section className="py-24 border-t border-border">
-
-<div className="container">
-
-
-<h2 className="text-4xl font-bold mb-10">
-Featured Projects
-</h2>
-
-
-
-<div className="grid lg:grid-cols-3 gap-8">
-
-
-{
-projects.map(project=>(
-
-<Link href={project.href} key={project.title}>
-
-<span className="
-group
-flex
-flex-col
-border
-border-border
-rounded-xl
-p-6
-cursor-pointer
-hover:border-accent/50
-transition
-h-full
+<section className="
+py-24
+relative
 ">
 
 
-<p className="text-accent text-xs font-mono mb-4">
-{project.badge}
+<div className="container">
+
+
+
+<div className="
+max-w-3xl
+
+mb-14
+">
+
+
+<p className="
+text-accent
+
+font-mono
+
+text-sm
+
+tracking-widest
+
+uppercase
+
+mb-4
+">
+
+Security Profile
+
 </p>
 
 
-<h3 className="text-xl font-bold mb-4 group-hover:text-accent">
-{project.title}
+
+
+<h2 className="
+text-4xl
+
+md:text-5xl
+
+font-bold
+">
+
+How I Build
+
+</h2>
+
+
+
+
+<p className="
+text-muted-foreground
+
+mt-5
+
+leading-relaxed
+">
+
+Security is not added at the end. I focus on designing,
+building, and improving systems with security considered
+from the beginning.
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+<div className="
+grid
+
+md:grid-cols-2
+
+lg:grid-cols-4
+
+gap-12
+">
+
+
+{
+
+[
+[
+"Threat Modeling",
+"Thinking like an attacker before writing code."
+],
+
+[
+"Secure Architecture",
+"Designing systems with security from the beginning."
+],
+
+[
+"Application Security",
+"Understanding vulnerabilities and defenses."
+],
+
+[
+"Continuous Learning",
+"Following new technologies and threats."
+]
+
+].map(item=>(
+
+
+
+<div
+key={item[0]}
+
+className="
+group
+
+relative
+
+pl-6
+"
+>
+
+
+<div className="
+absolute
+
+left-0
+
+top-0
+
+bottom-0
+
+w-px
+
+bg-gradient-to-b
+
+from-[#D6A544]
+
+to-transparent
+
+opacity-40
+
+group-hover:opacity-100
+
+transition
+"/>
+
+
+
+
+
+<h3 className="
+font-bold
+
+text-lg
+
+mb-3
+
+group-hover:text-[#E4B95E]
+
+transition
+">
+
+{item[0]}
+
 </h3>
 
 
-<p className="text-muted-foreground text-sm">
-{project.description}
+
+
+<p className="
+text-sm
+
+text-muted-foreground
+
+leading-relaxed
+">
+
+{item[1]}
+
 </p>
 
 
-<div className="flex flex-wrap gap-2 mt-6">
-
-{
-project.tags.map(tag=>(
-
-<span
-key={tag}
-className="text-xs bg-secondary px-3 py-1 rounded"
->
-{tag}
-</span>
-
-))
-}
 
 </div>
 
 
-<div className="mt-auto pt-8 flex gap-2 text-accent">
-View Project
-<ArrowRight size={16}/>
-</div>
-
-
-</span>
-
-</Link>
 
 ))
+
 }
 
 
-</div>
 
 </div>
+
+
+
+</div>
+
 
 </section>
 
@@ -550,72 +759,194 @@ View Project
 
 
 
-{/* TECHNOLOGY */}
 
 
-<section className="py-20">
+
+
+{/* ENGINEERING INTERESTS */}
+
+
+
+<section className="
+py-24
+">
 
 
 <div className="container">
 
 
-<h2 className="text-4xl font-bold mb-10">
-Technology Stack
+
+<p className="
+text-accent
+
+font-mono
+
+text-sm
+
+tracking-widest
+
+uppercase
+
+mb-4
+">
+
+Core Systems
+
+</p>
+
+
+
+
+<h2 className="
+text-4xl
+
+md:text-5xl
+
+font-bold
+
+mb-14
+">
+
+Engineering Interests
+
 </h2>
 
 
-<div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+
+
+
+<div className="
+grid
+
+md:grid-cols-3
+
+gap-10
+">
 
 
 {
-technologies.map(item=>{
+
+focusAreas.map(item=>{
+
 
 const Icon=item.icon;
 
 
+
 return (
 
+
+
 <div
+
 key={item.title}
+
 className="
-border
-border-border
-rounded-xl
-p-6
+group
+
+relative
+
+py-8
 "
 >
 
-<Icon className="text-accent mb-4"/>
 
 
-<h3 className="font-bold mb-3">
+<div className="
+absolute
+
+inset-0
+
+rounded-3xl
+
+bg-[radial-gradient(circle_at_top,rgba(181,26,43,.12),transparent_70%)]
+
+opacity-0
+
+group-hover:opacity-100
+
+transition
+
+blur-xl
+"/>
+
+
+
+
+
+<div className="
+relative
+">
+
+
+
+<Icon
+
+className="
+text-[#D6A544]
+
+group-hover:text-[#B51A2B]
+
+transition
+
+mb-6
+"
+
+size={36}
+
+/>
+
+
+
+
+<h3 className="
+text-xl
+
+font-bold
+
+mb-4
+">
+
 {item.title}
+
 </h3>
 
 
-{
-item.items.map(x=>(
 
-<p
-key={x}
-className="text-sm text-muted-foreground"
->
-{x}
+
+<p className="
+text-muted-foreground
+
+leading-relaxed
+">
+
+{item.description}
+
 </p>
 
-))
-}
 
 
 </div>
+
+
+
+
+</div>
+
+
 
 )
 
+
 })
+
 }
 
 
+
 </div>
+
 
 
 </div>
@@ -627,72 +958,756 @@ className="text-sm text-muted-foreground"
 
 
 
-{/* WRITEUPS */}
 
 
-<section className="py-20 border-t border-border">
+
+
+{/* FEATURED PROJECTS */}
+
+
+
+<section className="
+py-28
+">
 
 
 <div className="container">
 
 
-<div className="flex justify-between items-center mb-8">
+
+<div className="
+mb-14
+">
 
 
-<h2 className="text-4xl font-bold">
-Security Research
+<p className="
+text-accent
+
+font-mono
+
+text-sm
+
+tracking-widest
+
+uppercase
+
+mb-4
+">
+
+Selected Work
+
+</p>
+
+
+
+<h2 className="
+text-4xl
+
+md:text-5xl
+
+font-bold
+">
+
+Featured Projects
+
 </h2>
 
 
-<Link href="/writeups">
-<span className="text-accent cursor-pointer">
-View All
-</span>
-</Link>
-
-
 </div>
 
 
-<div className="grid md:grid-cols-3 gap-6">
+
+
+
+
+<div className="
+grid
+
+lg:grid-cols-3
+
+gap-8
+">
 
 
 {
-writeups.map(item=>(
 
-<div
-key={item.title}
+projects.map(project=>(
+
+
+
+<Link
+
+href={project.href}
+
+key={project.title}
+
+>
+
+
+
+<span
+
 className="
-border
-border-border
-rounded-xl
-p-6
+group
+
+relative
+
+block
+
+h-full
+
+cursor-pointer
 "
 >
 
-<FileText className="text-accent mb-4"/>
 
-<h3 className="font-bold">
-{item.title}
-</h3>
 
-<p className="text-sm text-muted-foreground mt-3">
-{item.tag}
+
+<div className="
+absolute
+
+inset-0
+
+rounded-3xl
+
+bg-[#B51A2B]
+
+opacity-0
+
+blur-3xl
+
+group-hover:opacity-10
+
+transition
+"/>
+
+
+
+
+
+
+
+<div className="
+relative
+
+rounded-3xl
+
+bg-[#161E3F]/40
+
+backdrop-blur-xl
+
+p-8
+
+min-h-[360px]
+
+hover:bg-[#242F49]/60
+
+transition
+">
+
+
+
+
+
+<p className="
+text-xs
+
+uppercase
+
+tracking-widest
+
+font-mono
+
+text-[#D6A544]
+
+mb-8
+">
+
+{project.badge}
+
 </p>
 
-</div>
+
+
+
+
+<h3 className="
+text-2xl
+
+font-bold
+
+mb-5
+
+group-hover:text-[#E4B95E]
+
+transition
+">
+
+{project.title}
+
+</h3>
+
+
+
+
+
+<p className="
+text-muted-foreground
+
+leading-relaxed
+">
+
+{project.description}
+
+</p>
+
+
+
+
+
+
+<div className="
+flex
+
+flex-wrap
+
+gap-3
+
+mt-8
+">
+
+
+{
+
+project.tags.map(tag=>(
+
+
+<span
+
+key={tag}
+
+className="
+text-xs
+
+px-3
+
+py-1
+
+rounded-full
+
+bg-[#0B0E16]
+
+text-[#A8B2D1]
+"
+
+>
+
+{tag}
+
+</span>
+
 
 ))
+
 }
 
 
 </div>
 
 
+
+
+
+
+<div className="
+absolute
+
+bottom-8
+
+flex
+
+items-center
+
+gap-2
+
+text-[#E4B95E]
+
+text-sm
+">
+
+
+View Project
+
+<ArrowRight size={16}/>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+</span>
+
+
+
+</Link>
+
+
+
+))
+
+
+}
+
+
+
+</div>
+
+
+
 </div>
 
 
 </section>
+
+
+
+{/* TECHNOLOGY STACK */}
+
+
+<section className="
+py-24
+">
+
+
+<div className="container">
+
+
+
+<p className="
+text-accent
+
+font-mono
+
+text-sm
+
+tracking-widest
+
+uppercase
+
+mb-4
+">
+
+Technology Matrix
+
+</p>
+
+
+
+
+<h2 className="
+text-4xl
+
+md:text-5xl
+
+font-bold
+
+mb-14
+">
+
+Technology Stack
+
+</h2>
+
+
+
+
+
+
+
+<div className="
+grid
+
+md:grid-cols-2
+
+lg:grid-cols-4
+
+gap-10
+">
+
+
+{
+
+
+technologies.map(item=>{
+
+
+const Icon=item.icon;
+
+
+
+return (
+
+
+<div
+
+key={item.title}
+
+className="
+group
+"
+>
+
+
+
+<Icon
+
+size={34}
+
+className="
+text-[#D6A544]
+
+group-hover:text-[#B51A2B]
+
+transition
+
+mb-6
+"
+
+/>
+
+
+
+
+<h3 className="
+font-bold
+
+text-lg
+
+mb-5
+">
+
+{item.title}
+
+</h3>
+
+
+
+
+<div className="
+space-y-2
+">
+
+
+{
+
+item.items.map(skill=>(
+
+
+<p
+
+key={skill}
+
+className="
+text-sm
+
+text-muted-foreground
+
+hover:text-white
+
+transition
+"
+>
+
+{skill}
+
+</p>
+
+
+))
+
+
+}
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+)
+
+
+})
+
+
+}
+
+
+</div>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+{/* SECURITY RESEARCH */}
+
+
+
+<section className="
+py-24
+">
+
+
+<div className="container">
+
+
+
+<div className="
+flex
+
+justify-between
+
+items-end
+
+mb-14
+">
+
+
+
+<div>
+
+
+<p className="
+text-accent
+
+font-mono
+
+text-sm
+
+tracking-widest
+
+uppercase
+
+mb-4
+">
+
+Research Database
+
+</p>
+
+
+
+
+<h2 className="
+text-4xl
+
+md:text-5xl
+
+font-bold
+">
+
+Security Research
+
+</h2>
+
+
+</div>
+
+
+
+
+<Link href="/writeups">
+
+
+<span className="
+text-muted-foreground
+
+hover:text-[#E4B95E]
+
+transition
+
+cursor-pointer
+">
+
+View All
+
+</span>
+
+
+</Link>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div className="
+grid
+
+md:grid-cols-3
+
+gap-10
+">
+
+
+{
+
+
+writeups.map(item=>(
+
+
+
+<div
+
+key={item.title}
+
+className="
+group
+
+relative
+"
+>
+
+
+
+
+<div className="
+absolute
+
+inset-0
+
+bg-[radial-gradient(circle_at_top,rgba(181,26,43,.12),transparent_70%)]
+
+opacity-0
+
+group-hover:opacity-100
+
+blur-2xl
+
+transition
+"/>
+
+
+
+
+
+
+<div className="
+relative
+
+py-8
+">
+
+
+
+
+
+<FileText
+
+className="
+text-[#D6A544]
+
+group-hover:text-[#B51A2B]
+
+transition
+
+mb-6
+"
+
+/>
+
+
+
+
+
+<h3 className="
+text-xl
+
+font-bold
+
+mb-4
+
+group-hover:text-[#E4B95E]
+
+transition
+">
+
+{item.title}
+
+</h3>
+
+
+
+
+
+<p className="
+text-sm
+
+text-muted-foreground
+">
+
+{item.tag}
+
+</p>
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+))
+
+
+}
+
+
+
+</div>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
 
 
 
@@ -701,40 +1716,111 @@ p-6
 {/* LEARNING */}
 
 
-<section className="py-20">
+
+<section className="
+py-24
+">
 
 
 <div className="container">
 
 
-<h2 className="text-4xl font-bold mb-8">
+<p className="
+text-accent
+
+font-mono
+
+text-sm
+
+tracking-widest
+
+uppercase
+
+mb-4
+">
+
+Active Development
+
+</p>
+
+
+
+
+
+<h2 className="
+text-4xl
+
+md:text-5xl
+
+font-bold
+
+mb-10
+">
+
 Currently Exploring
+
 </h2>
 
 
-<div className="flex flex-wrap gap-4">
+
+
+
+
+
+<div className="
+flex
+
+flex-wrap
+
+gap-5
+">
 
 
 {
-learning.map(x=>(
+
+
+learning.map(item=>(
+
+
 
 <div
-key={x}
+
+key={item}
+
 className="
-border
-border-border
-rounded-lg
-px-5
+px-6
+
 py-3
+
+rounded-full
+
+bg-[#161E3F]/50
+
+backdrop-blur
+
+text-[#A8B2D1]
+
+hover:text-[#E4B95E]
+
+hover:bg-[#242F49]
+
+transition
 "
 >
 
-{x}
+
+{item}
+
 
 </div>
 
+
+
 ))
+
+
 }
+
 
 
 </div>
@@ -744,6 +1830,9 @@ py-3
 
 
 </section>
+
+
+
 
 
 
@@ -753,43 +1842,211 @@ py-3
 {/* CTA */}
 
 
-<section className="py-24 border-t border-border">
 
-<div className="container text-center">
+<section className="
+relative
+
+py-32
+
+overflow-hidden
+">
 
 
-<h2 className="text-4xl font-bold mb-5">
-Interested in secure software?
-</h2>
+
+<div className="
+absolute
+
+inset-0
+
+bg-[radial-gradient(circle_at_center,rgba(181,26,43,.20),transparent_60%)]
+"/>
 
 
-<p className="text-muted-foreground mb-8">
-Let's connect and build something meaningful.
+
+
+
+<div className="
+container
+
+relative
+
+text-center
+">
+
+
+
+<p className="
+text-[#E4B95E]
+
+font-mono
+
+tracking-widest
+
+uppercase
+
+text-sm
+
+mb-6
+">
+
+Connection Available
+
 </p>
 
 
-<div className="flex justify-center gap-5">
 
 
-<a href="https://github.com/YOUR_GITHUB">
-<Github className="text-accent"/>
+
+
+<h2 className="
+text-5xl
+
+md:text-6xl
+
+font-bold
+
+max-w-4xl
+
+mx-auto
+">
+
+Interested in secure software?
+
+</h2>
+
+
+
+
+
+
+<p className="
+text-muted-foreground
+
+text-lg
+
+mt-6
+
+max-w-xl
+
+mx-auto
+">
+
+Let's connect and build something meaningful.
+
+</p>
+
+
+
+
+
+
+<div className="
+flex
+
+justify-center
+
+gap-5
+
+mt-10
+">
+
+
+
+<a
+
+href="https://github.com/YOUR_GITHUB"
+
+className="
+p-4
+
+rounded-full
+
+bg-[#161E3F]/60
+
+backdrop-blur
+
+hover:bg-[#242F49]
+
+transition
+"
+>
+
+
+<Github
+
+className="
+text-[#D6A544]
+
+hover:text-[#E4B95E]
+
+transition
+"
+
+/>
+
+
 </a>
 
 
-<a href="https://linkedin.com/in/YOUR_LINKEDIN">
-<Linkedin className="text-accent"/>
+
+
+
+
+<a
+
+href="https://linkedin.com/in/YOUR_LINKEDIN"
+
+className="
+p-4
+
+rounded-full
+
+bg-[#161E3F]/60
+
+backdrop-blur
+
+hover:bg-[#242F49]
+
+transition
+"
+>
+
+
+<Linkedin
+
+className="
+text-[#D6A544]
+
+hover:text-[#E4B95E]
+
+transition
+"
+
+/>
+
+
 </a>
+
+
 
 
 </div>
 
 
+
 </div>
+
+
 
 </section>
 
 
+
+
+
+
 </Layout>
+
 
 );
 
@@ -799,44 +2056,91 @@ Let's connect and build something meaningful.
 
 
 
+
+
+
 function Status({
+
 label,
+
 value,
+
 icon:Icon,
+
 }:{
+
 label:string;
+
 value:string;
+
 icon:any;
+
 }){
 
 
 return (
 
+
 <div className="
 flex
+
 justify-between
+
 items-center
+
 border-b
+
 border-border
+
 py-3
 ">
 
 
-<div className="flex gap-3 items-center">
+<div className="
+flex
 
-<Icon size={20}/>
+items-center
+
+gap-3
+">
+
+
+<Icon
+
+size={20}
+
+/>
+
+
+
+<span>
 
 {label}
 
-</div>
-
-
-<span className="text-accent font-mono text-sm">
-{value}
 </span>
 
 
 </div>
+
+
+
+
+<span className="
+text-accent
+
+font-mono
+
+text-sm
+">
+
+{value}
+
+</span>
+
+
+
+</div>
+
 
 )
 
