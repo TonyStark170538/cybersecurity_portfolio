@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import Layout from "@/components/Layout";
+import reactor from "@/images/main.png";
 
 
 
@@ -423,12 +424,29 @@ Download CV
 
 <div className="
 hidden
-
 lg:flex
-
 justify-center
+relative
 ">
 
+  {/* Background Image */}
+
+  <img
+    src={reactor}
+    alt=""
+    aria-hidden="true"
+    className="
+      absolute
+      w-[520px]
+      right-[-140px]
+      top-[-110px]
+      opacity-[0.07]
+      blur-[1px]
+      pointer-events-none
+      select-none
+      animate-pulse
+    "
+  />
 
 <div className="
 w-80
