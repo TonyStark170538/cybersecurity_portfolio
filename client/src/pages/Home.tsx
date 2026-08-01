@@ -2001,7 +2001,7 @@ transition
 
 <a
 
-href="https://linkedin.com/in/YOUR_LINKEDIN"
+href="https://www.linkedin.com/in/antonina-shcherbakova"
 
 className="
 p-4
