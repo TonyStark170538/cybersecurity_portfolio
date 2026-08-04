@@ -88,8 +88,13 @@ rgba(36,47,73,.72);
 
 /* TEXT */
 
---secondary-text:#A8B2D1;
---muted:#6E7897;
+--secondary:#161E3F;
+--secondary-foreground:#FFFFFF;
+
+--muted:#1D2542;
+--muted-foreground:#A8B2D1;
+
+--input:#2D3650;
 
 
 
@@ -590,12 +595,7 @@ transparent
 
 
 
-.flex {
 
-min-height:0;
-min-width:0;
-
-}
 
 
 }

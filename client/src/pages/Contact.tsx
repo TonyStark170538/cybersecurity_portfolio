@@ -86,13 +86,13 @@ export default function Contact() {
           </p>
 
           <h1 className="text-5xl font-bold">
-            Get in Touch
+            Let's connect
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-2xl">
-            Interested in cybersecurity opportunities,
-            collaboration, or have a question?
-            Send me a message and I'll respond as soon as I can.
+            Whether you're hiring, looking to collaborate
+            on a security project, or just want to say hello —
+            I'd love to hear from you.
           </p>
         </div>
       </section>
@@ -103,17 +103,7 @@ export default function Contact() {
 
             <div className="space-y-8">
 
-              <div>
-                <h2 className="text-2xl font-bold mb-4">
-                  Let's connect
-                </h2>
-
-                <p className="text-muted-foreground leading-relaxed">
-                  Whether you're hiring, looking to collaborate
-                  on a security project, or just want to say hello —
-                  I'd love to hear from you.
-                </p>
-              </div>
+            
 
               <div className="space-y-6">
 

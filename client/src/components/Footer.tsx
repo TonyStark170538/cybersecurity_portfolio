@@ -13,7 +13,7 @@ export default function Footer() {
           <div className="flex flex-col gap-2">
             <h3 className="font-bold text-foreground">Let's work together</h3>
             <p className="text-sm text-muted-foreground">
-              Interested in cybersecurity opportunities? Get in touch.
+              Looking for a cybersecurity specialist? I'm open to new projects and collaborations.
             </p>
           </div>
 
@@ -29,7 +29,7 @@ export default function Footer() {
               <Github size={20} />
             </a>
             <a
-              href="https://www.linkedin.com/in/antonina-shcherbakova/"
+              href="https://www.linkedin.com/in/antonina-shcherbakova"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-accent transition-colors"

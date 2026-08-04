@@ -15,8 +15,8 @@ import {
 } from "lucide-react";
 
 import Layout from "@/components/Layout";
-import reactor from "@/images/main.png";
-
+import Robot from "@/components/Robot";
+import { Download } from "lucide-react";
 
 
 export default function Home() {
@@ -227,18 +227,22 @@ pointer-events-none
 "/>
 
 
-<div className="
-absolute
-bottom-0
-left-0
+<div
+  className="
+  absolute
+  bottom-0
+  left-0
 
-w-[500px]
-h-[500px]
+  w-[500px]
+  h-[500px]
 
-bg-[radial-gradient(circle,rgba(214,165,68,.10),transparent_70%)]
+  bg-[radial-gradient(circle,rgba(214,165,68,.10),transparent_70%)]
 
-blur-3xl
-"/>
+  blur-3xl
+
+  pointer-events-none
+"
+/>
 
 
 
@@ -285,14 +289,14 @@ leading-tight
 ">
 
 
-Building secure software systems powered by
+Hi I
 
 
 <span className="
 text-[#D6A544]
 ">
 
-cloud, AI, and modern engineering
+'m Toni
 
 </span>
 
@@ -311,7 +315,7 @@ leading-relaxed
 ">
 
 
-I'm Toni, a software engineering student focused on
+A software engineer focused on
 cybersecurity, cloud infrastructure, and AI-powered applications.
 
 
@@ -338,32 +342,9 @@ gap-5
 
 
 
-<Link href="/projects">
-
-
-<span className="
-stark-button
-
-inline-flex
-
-items-center
-
-gap-3
-
-px-7
-
-py-3
-
-cursor-pointer
-">
-
-View Projects
-
-<ArrowRight size={18}/>
-
-</span>
-
-
+<Link href="/projects" className="stark-button inline-flex items-center gap-3 px-7 py-3">
+  View Projects
+  <ArrowRight size={18} />
 </Link>
 
 
@@ -371,35 +352,14 @@ View Projects
 
 
 <a
-href="/cv.pdf"
-
-className="
-inline-flex
-
-items-center
-
-px-7
-
-py-3
-
-rounded-full
-
-border
-
-border-border
-
-text-muted-foreground
-
-hover:text-white
-
-hover:border-[#D6A544]
-
-transition
-"
+  href="/CV.pdf"
+  download="Antonina_Shcherbakova_CV.pdf"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="stark-button inline-flex items-center gap-3 px-7 py-3 cursor-pointer"
 >
-
-Download CV
-
+  <Download size={18} />
+  Download CV
 </a>
 
 
@@ -417,151 +377,29 @@ Download CV
 
 
 
+{/* SECURITY STATUS */}
 
-{/* SECURITY STATUS - ORIGINAL VERSION */}
+<div className="hidden lg:flex justify-center relative">
 
-
-
-<div className="
-hidden
-lg:flex
-justify-center
-relative
-">
-
-  {/* Background Image */}
-
-  <img
-    src={reactor}
-    alt=""
-    aria-hidden="true"
+  {/* 3D Robot */}
+  <div
     className="
       absolute
-      w-[520px]
-      right-[-140px]
-      top-[-110px]
-      opacity-[0.07]
-      blur-[1px]
+      -top-74
+      -right-44
+      w-[750px]
+      h-[850px]
       pointer-events-none
-      select-none
-      animate-pulse
     "
-  />
-
-<div className="
-w-80
-
-rounded-xl
-
-border
-
-border-border
-
-bg-secondary/30
-
-p-6
-
-backdrop-blur-sm
-">
-
-
-
-<div className="
-flex
-
-justify-between
-
-mb-6
-">
-
-
-<p className="
-font-mono
-
-text-sm
-
-text-accent
-">
-
-SECURITY STATUS
-
-</p>
-
-
-
-
-<span className="
-h-3
-
-w-3
-
-rounded-full
-
-bg-accent
-
-shadow-[0_0_15px_rgba(214,165,68,.7)]
-"/>
-
-
+  >
+    <Robot />
+  </div>
 
 </div>
-
-
-
-
-
-<Status
-label="Cloud"
-value="AWS + GCP"
-icon={Cloud}
-/>
-
-
-
-<Status
-label="Security"
-value="Active"
-icon={Shield}
-/>
-
-
-
-
-<Status
-label="AI"
-value="Building"
-icon={Brain}
-/>
-
-
-
-
-
-<Status
-label="Projects"
-value="3 Active"
-icon={Code2}
-/>
-
-
-
-
-
 </div>
-
-
 </div>
-
-
-
-
-</div>
-
-
-</div>
-
-
 </section>
+
 
 
 {/* SECURITY PROFILE */}
@@ -1837,216 +1675,6 @@ transition
 
 
 </section>
-
-
-
-
-
-
-
-
-
-{/* CTA */}
-
-
-
-<section className="
-relative
-
-py-32
-
-overflow-hidden
-">
-
-
-
-<div className="
-absolute
-
-inset-0
-
-bg-[radial-gradient(circle_at_center,rgba(181,26,43,.20),transparent_60%)]
-"/>
-
-
-
-
-
-<div className="
-container
-
-relative
-
-text-center
-">
-
-
-
-<p className="
-text-[#E4B95E]
-
-font-mono
-
-tracking-widest
-
-uppercase
-
-text-sm
-
-mb-6
-">
-
-Connection Available
-
-</p>
-
-
-
-
-
-
-<h2 className="
-text-5xl
-
-md:text-6xl
-
-font-bold
-
-max-w-4xl
-
-mx-auto
-">
-
-Interested in secure software?
-
-</h2>
-
-
-
-
-
-
-<p className="
-text-muted-foreground
-
-text-lg
-
-mt-6
-
-max-w-xl
-
-mx-auto
-">
-
-Let's connect and build something meaningful.
-
-</p>
-
-
-
-
-
-
-<div className="
-flex
-
-justify-center
-
-gap-5
-
-mt-10
-">
-
-
-
-<a
-
-href="https://github.com/YOUR_GITHUB"
-
-className="
-p-4
-
-rounded-full
-
-bg-[#161E3F]/60
-
-backdrop-blur
-
-hover:bg-[#242F49]
-
-transition
-"
->
-
-
-<Github
-
-className="
-text-[#D6A544]
-
-hover:text-[#E4B95E]
-
-transition
-"
-
-/>
-
-
-</a>
-
-
-
-
-
-
-<a
-
-href="https://www.linkedin.com/in/antonina-shcherbakova"
-
-className="
-p-4
-
-rounded-full
-
-bg-[#161E3F]/60
-
-backdrop-blur
-
-hover:bg-[#242F49]
-
-transition
-"
->
-
-
-<Linkedin
-
-className="
-text-[#D6A544]
-
-hover:text-[#E4B95E]
-
-transition
-"
-
-/>
-
-
-</a>
-
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-</section>
-
 
 
 

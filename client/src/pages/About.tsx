@@ -324,7 +324,7 @@ export default function About() {
 
 
               <a
-                href="/resume.pdf"
+                href="/cv.pdf"
                 className="
                 inline-flex
                 items-center
