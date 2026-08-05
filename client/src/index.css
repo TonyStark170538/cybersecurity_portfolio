@@ -599,3 +599,33 @@ transparent
 
 
 }
+
+.ai-mode {
+
+animation: aiPulse 20s ease;
+
+}
+
+
+@keyframes aiPulse {
+
+0% {
+filter:none;
+}
+
+
+50% {
+
+filter:
+drop-shadow(0 0 30px cyan);
+
+}
+
+
+100% {
+
+filter:none;
+
+}
+
+}

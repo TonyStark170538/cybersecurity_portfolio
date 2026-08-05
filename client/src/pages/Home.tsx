@@ -15,11 +15,12 @@ import {
 } from "lucide-react";
 
 import Layout from "@/components/Layout";
-import Robot from "@/components/Robot";
+import Robot from "@/components/robot/Robot";
 import { Download } from "lucide-react";
-
+import { useEffect, useState } from "react";
 
 export default function Home() {
+const [aiMode, setAiMode] = useState(false);
 
 
 const focusAreas = [
@@ -194,14 +195,52 @@ const learning = [
 
 
 
-
-
 return (
 
 <Layout>
 
+<div
+className={`
+min-h-screen
+transition-all
+duration-700
+${aiMode ? "ai-mode" : ""}
+`}
+>
+
 
 {/* HERO */}
+
+{aiMode && (
+
+<div
+className="
+fixed
+top-28
+left-1/2
+-translate-x-1/2
+z-50
+px-8
+py-4
+rounded-xl
+bg-black/80
+border
+border-cyan-400
+text-cyan-300
+font-mono
+shadow-lg
+"
+>
+
+J.A.R.V.I.S SYSTEM ONLINE
+
+<br/>
+
+Security protocols initialized...
+
+</div>
+
+)}
 
 
 <section className="
@@ -382,18 +421,34 @@ gap-5
 <div className="hidden lg:flex justify-center relative">
 
   {/* 3D Robot */}
-  <div
-    className="
-      absolute
-      -top-74
-      -right-44
-      w-[750px]
-      h-[850px]
-      pointer-events-none
-    "
-  >
-    <Robot />
-  </div>
+ <div
+  className="
+    absolute
+    -top-82
+    -right-44
+    w-[750px]
+    h-[850px]
+  "
+>
+
+<Robot
+
+onActivate={()=>{
+
+setAiMode(true);
+
+
+setTimeout(()=>{
+
+setAiMode(false);
+
+},5000)
+
+}}
+
+/>
+
+</div>
 
 </div>
 </div>
@@ -1677,13 +1732,14 @@ transition
 </section>
 
 
-
+</div>
 
 
 </Layout>
 
 
 );
+
 
 }
 
