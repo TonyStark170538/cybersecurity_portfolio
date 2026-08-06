@@ -216,9 +216,9 @@ ${aiMode ? "ai-mode" : ""}
 <div
 className="
 fixed
-top-28
-left-1/2
--translate-x-1/2
+top-98
+right-42
+-translate-x-12
 z-50
 px-8
 py-4
@@ -246,7 +246,12 @@ Security protocols initialized...
 <section className="
 relative
 overflow-hidden
-py-32
+
+pt-20
+pb-12
+
+lg:pt-32
+lg:pb-32
 ">
 
 
@@ -291,8 +296,8 @@ pointer-events-none
 
 <div className="
 grid
-lg:grid-cols-2
-gap-16
+lg:grid-cols-[1.1fr_0.9fr]
+gap-4
 items-center
 ">
 
@@ -418,25 +423,29 @@ gap-5
 
 {/* SECURITY STATUS */}
 
-<div className="hidden lg:flex justify-center relative">
+<div className="flex justify-center lg:justify-end relative">
 
-  {/* 3D Robot */}
- <div
-  className="
-    absolute
-    -top-82
-    -right-44
-    w-[750px]
-    h-[850px]
-  "
->
+  <div
+    className="
+    relative
+
+    w-[320px]
+    h-[320px]
+
+    sm:w-[400px]
+    sm:h-[400px]
+
+    lg:w-[500px]
+    lg:h-[660px]
+
+    translate-y-6
+    "
+  >
 
 <Robot
-
 onActivate={()=>{
 
 setAiMode(true);
-
 
 setTimeout(()=>{
 
@@ -445,7 +454,6 @@ setAiMode(false);
 },5000)
 
 }}
-
 />
 
 </div>

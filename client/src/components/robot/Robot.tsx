@@ -17,10 +17,9 @@ return (
 <Canvas
 
 camera={{
-position:[0,1,5],
-fov:45
+  position: [0, 1.1, 5.4],
+  fov: 36,
 }}
-
 >
 
 

@@ -349,13 +349,9 @@ setActive(false);
 return (
 
 <Float
-
-speed={2}
-
-floatIntensity={0.5}
-
-rotationIntensity={0.1}
-
+ speed={1}
+ floatIntensity={0.08}
+ rotationIntensity={0.03}
 >
 
 
@@ -371,13 +367,9 @@ onPointerDown={activate}
 
 
 <primitive
-
-object={scene}
-
-scale={0.55}
-
-position={[0,-1,0]}
-
+ object={scene}
+ scale={0.52}
+ position={[0,-1.35,0]}
 />
 
 
