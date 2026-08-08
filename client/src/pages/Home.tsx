@@ -211,37 +211,6 @@ ${aiMode ? "ai-mode" : ""}
 
 {/* HERO */}
 
-{aiMode && (
-
-<div
-className="
-fixed
-top-98
-right-42
--translate-x-12
-z-50
-px-8
-py-4
-rounded-xl
-bg-black/80
-border
-border-cyan-400
-text-cyan-300
-font-mono
-shadow-lg
-"
->
-
-J.A.R.V.I.S SYSTEM ONLINE
-
-<br/>
-
-Security protocols initialized...
-
-</div>
-
-)}
-
 
 <section className="
 relative
@@ -454,7 +423,45 @@ setAiMode(false);
 },5000)
 
 }}
+
 />
+
+{aiMode && (
+  <div
+    className="
+      fixed
+      z-50
+
+      /* MOBILE POSITION */
+      top-[50%]
+      left-1/2
+      -translate-x-1/2
+
+      /* ORIGINAL STYLE */
+      px-8
+      py-4
+      rounded-xl
+      bg-black/80
+      border
+      border-cyan-400
+      text-cyan-300
+      font-mono
+      shadow-lg
+
+      /* DESKTOP — YOUR ORIGINAL POSITION */
+      lg:top-98
+      lg:left-auto
+      lg:right-42
+      lg:-translate-x-12
+    "
+  >
+    J.A.R.V.I.S SYSTEM ONLINE
+
+    <br />
+
+    Security protocols initialized...
+  </div>
+)}
 
 </div>
 
