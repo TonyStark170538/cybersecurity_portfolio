@@ -138,6 +138,85 @@ Edit the following files to add your information:
 2. Create a detail page for the writeup
 3. Include tags for categorization
 
+# Interactive Cybersecurity AI Robot
+
+## Overview
+
+I built an interactive 3D cybersecurity assistant as part of my
+portfolio website.
+
+The experience uses React Three Fiber and a GLB robot model
+embedded directly into the homepage.
+
+The robot is designed to feel like an interactive security assistant
+rather than a static 3D decoration.
+
+## Interactions
+
+The robot reacts to the user's cursor and follows its movement
+using smooth interpolation.
+
+Users can also click the robot to activate it.
+
+The first interaction triggers an introduction voice response,
+while subsequent interactions can trigger a secondary response.
+
+The robot also uses subtle floating and animation to create a
+continuous sense of activity.
+
+## Technology
+
+- React
+- TypeScript
+- React Three Fiber
+- Three.js
+- Drei
+- GLB 3D model
+- Web Audio
+
+## Performance
+
+The 3D experience is lazy-loaded so the Three.js scene does not
+block the initial page rendering.
+
+A loading fallback is displayed while the 3D experience initializes.
+
+The experience detects users who prefer reduced motion and provides
+a static fallback instead of running the animated 3D scene.
+
+Basic device capability detection is also used to avoid loading
+the experience on lower-powered devices.
+
+The scene uses simple lighting and limited animation rather than
+expensive post-processing effects.
+
+## Accessibility
+
+Users who enable `prefers-reduced-motion` receive a static fallback.
+
+The interaction is designed to work with pointer and touch input.
+
+## FE-10 Performance Reflection
+
+The main performance cost comes from loading and rendering the
+3D model and maintaining the animation loop.
+
+To keep the experience lightweight, I lazy-loaded the Canvas,
+limited the number of lights and effects, avoided expensive
+post-processing, and added fallbacks for reduced-motion and
+lower-powered devices.
+
+## Future Improvements
+
+With more time I would:
+
+- Compress the GLB using Draco or Meshopt if further optimization
+  is needed.
+- Add more interaction states.
+- Add additional robot animations.
+- Measure frame rate and GPU usage on a wider range of mobile devices.
+- Add a more sophisticated loading experience.
+
 ### Customize Theme
 
 Edit `client/src/index.css` to change:
