@@ -355,7 +355,16 @@ gap-5
 
 
 
-<Link href="/projects" className="stark-button inline-flex items-center gap-3 px-7 py-3">
+<Link
+  href="/projects"
+  onClick={()=>{
+    const audio = new Audio("/models/projects.mp3");
+    audio.play().catch((error)=>{
+      console.error("Unable to play robot voice:", error);
+    });
+  }}
+  className="stark-button inline-flex items-center gap-3 px-7 py-3"
+>
   View Projects
   <ArrowRight size={18} />
 </Link>
@@ -962,11 +971,14 @@ projects.map(project=>(
 
 
 <Link
-
-href={project.href}
-
-key={project.title}
-
+  href={project.href}
+  key={project.title}
+  onClick={()=>{
+    const audio = new Audio("/models/projects.mp3");
+    audio.play().catch((error)=>{
+      console.error("Unable to play robot voice:", error);
+    });
+  }}
 >
 
 
