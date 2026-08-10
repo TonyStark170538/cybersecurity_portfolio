@@ -1,300 +1,242 @@
-import {
-  Float,
-  useAnimations,
-  useGLTF,
-} from "@react-three/drei";
-
-import {
-  useFrame,
-} from "@react-three/fiber";
-
-import {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-
+import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-
 
 type Props = {
   onActivate?: () => void;
+  state?: RobotVisualState;
+  frozen?: boolean;
 };
 
+export type RobotVisualState =
+  | "ready"
+  | "thinking"
+  | "speaking";
 
 export default function RobotModel({
-  onActivate
+  onActivate,
+  state = "ready",
+  frozen = false,
 }: Props) {
+  const group = useRef<THREE.Group | null>(null);
 
+  const { scene } = useGLTF("/models/robot.glb");
 
-  const group =
-    useRef<THREE.Group>(null);
+  const [active, setActive] = useState(false);
 
+  const mouse = useRef({
+    x: 0,
+    y: 0,
+  });
 
-  const { scene, animations } =
-    useGLTF("/models/robot.glb");
+  const glowing = useRef<THREE.Object3D[]>([]);
 
+  /*
+   * Find the robot meshes once the GLB is loaded.
+   *
+   * We intentionally don't use instanceof THREE.Mesh or
+   * instanceof THREE.MeshStandardMaterial here because newer
+   * Three.js typings can cause excessive type-depth errors.
+   */
+  useEffect(() => {
+    const meshes: THREE.Object3D[] = [];
 
-  const { actions } =
-    useAnimations(
-      animations,
-      group
-    );
-
-
-  const [active, setActive] =
-    useState(false);
-
-  const [hasIntroduced, setHasIntroduced] =
-    useState(false);
-  const audioRef =
-  useRef<HTMLAudioElement | null>(null);
-
-
-  const mouse =
-    useRef({
-      x: 0,
-      y: 0
+    scene.traverse((object) => {
+      if ("isMesh" in object && object.isMesh) {
+        meshes.push(object);
+      }
     });
 
+    glowing.current = meshes;
+  }, [scene]);
 
-  const glowing =
-    useRef<THREE.Mesh[]>([]);
-
-
+  /*
+   * Mouse tracking
+   */
   useEffect(() => {
+    const moveMouse = (event: MouseEvent) => {
+      mouse.current.x =
+        event.clientX / window.innerWidth - 0.5;
 
+      mouse.current.y =
+        event.clientY / window.innerHeight - 0.5;
+    };
 
-    Object.values(actions)
-      .forEach(
-        (action) => action?.play()
-      );
+    const moveTouch = (event: TouchEvent) => {
+      const touch = event.touches[0];
 
-
-    const meshes: THREE.Mesh[] = [];
-
-
-    scene.traverse((obj) => {
-
-
-      if (
-        obj instanceof THREE.Mesh &&
-        obj.material instanceof THREE.MeshStandardMaterial
-      ) {
-
-        meshes.push(obj);
-
+      if (!touch) {
+        return;
       }
 
-    });
+      mouse.current.x =
+        touch.clientX / window.innerWidth - 0.5;
 
-
-    glowing.current =
-      meshes;
-
-
-    const moveMouse =
-      (e: MouseEvent) => {
-
-
-        mouse.current.x =
-          (e.clientX / window.innerWidth) - 0.5;
-
-
-        mouse.current.y =
-          (e.clientY / window.innerHeight) - 0.5;
-
-      };
-
-
-    const moveTouch =
-      (e: TouchEvent) => {
-
-
-        const touch =
-          e.touches[0];
-
-
-        mouse.current.x =
-          (touch.clientX / window.innerWidth) - 0.5;
-
-
-        mouse.current.y =
-          (touch.clientY / window.innerHeight) - 0.5;
-
-      };
-
+      mouse.current.y =
+        touch.clientY / window.innerHeight - 0.5;
+    };
 
     window.addEventListener(
       "mousemove",
-      moveMouse
+      moveMouse,
     );
-
 
     window.addEventListener(
       "touchmove",
       moveTouch,
       {
-        passive: true
-      }
+        passive: true,
+      },
     );
 
-
     return () => {
-
-
       window.removeEventListener(
         "mousemove",
-        moveMouse
+        moveMouse,
       );
-
 
       window.removeEventListener(
         "touchmove",
-        moveTouch
+        moveTouch,
       );
-
     };
+  }, []);
 
+  /*
+   * Robot animation / interaction.
+   */
+  useFrame((frameState, delta) => {
+    const robot = group.current;
 
-  }, [actions, scene]);
-
-
-  useFrame((state, delta) => {
-
-
-    const robot =
-      group.current;
-
-
-    if (!robot)
+    if (!robot) {
       return;
+    }
 
+    const isThinking = state === "thinking";
+    const isSpeaking = state === "speaking";
+    const isStill = active || (frozen && !isThinking && !isSpeaking);
+    const isReady = !isThinking && !isSpeaking && !isStill;
+    const elapsed = frameState.clock.elapsedTime;
 
-    // look at user
-
-    robot.rotation.y =
-      THREE.MathUtils.lerp(
+    /*
+     * Follow the cursor, with a slow autonomous idle sway so the robot
+     * continues to feel alive even when nobody is moving the mouse.
+     */
+    if (!isStill) {
+      robot.rotation.y = THREE.MathUtils.lerp(
         robot.rotation.y,
-        mouse.current.x * 0.5,
-        delta * 3
+        mouse.current.x * 0.5 +
+          (isReady ? Math.sin(elapsed * 0.65) * 0.1 : 0),
+        delta * 3,
       );
 
-
-    robot.rotation.x =
-      THREE.MathUtils.lerp(
+      robot.rotation.x = THREE.MathUtils.lerp(
         robot.rotation.x,
-        mouse.current.y * -0.25,
-        delta * 3
+        mouse.current.y * -0.25 +
+          (isReady ? Math.sin(elapsed * 0.9) * 0.025 : 0),
+        delta * 3,
       );
 
-
-    // small alive movement
-
-    robot.position.y =
-      Math.sin(
-        state.clock.elapsedTime * 2
-      ) * 0.08;
-
-
-    // glow
-
-    glowing.current.forEach((mesh) => {
-
-
-      const material =
-        mesh.material as THREE.MeshStandardMaterial;
-
-
-      material.emissive.set(
-        active
-          ? "#00ffff"
-          : "#ff0033"
+      robot.rotation.z = THREE.MathUtils.lerp(
+        robot.rotation.z,
+        isReady ? Math.sin(elapsed * 0.75) * 0.035 : 0,
+        delta * 2,
       );
+    }
 
+    const pulse =
+      Math.sin(elapsed * (isSpeaking ? 7 : 3)) *
+      (isSpeaking ? 0.5 : isThinking ? 0.2 : 0);
 
-      material.emissiveIntensity =
-        THREE.MathUtils.lerp(
-          material.emissiveIntensity,
-          active ? 5 : 1,
-          delta * 5
+    if (!isStill) {
+      robot.position.y =
+        Math.sin(elapsed * (isReady ? 1.35 : 2)) *
+        (isSpeaking ? 0.12 : isReady ? 0.13 : 0.08);
+    }
+
+    /*
+     * Robot glow.
+     */
+    glowing.current.forEach((object) => {
+      const material = (
+        object as THREE.Mesh
+      ).material;
+
+      if (
+        material &&
+        typeof material === "object" &&
+        "emissive" in material &&
+        "emissiveIntensity" in material
+      ) {
+        const emissiveMaterial =
+          material as THREE.MeshStandardMaterial;
+
+        emissiveMaterial.emissive.set(
+          isSpeaking
+            ? "#00ffff"
+            : isThinking
+              ? "#D6A544"
+              : active
+                ? "#00ffff"
+                : "#ff0033",
         );
 
+        emissiveMaterial.emissiveIntensity =
+          THREE.MathUtils.lerp(
+            emissiveMaterial.emissiveIntensity,
+            isSpeaking
+              ? 5 + pulse
+              : isThinking
+                ? 3 + pulse
+                : active
+                  ? 4
+                  : 1,
+            delta * 5,
+          );
+      }
     });
-
-
   });
 
-
+  /*
+   * Robot interaction.
+   *
+   * IMPORTANT:
+   * Audio is no longer played here.
+   *
+   * RobotAssistant owns the AI audio lifecycle.
+   * This component only changes the robot's visual state
+   * and notifies the parent.
+   */
   function activate() {
+    setActive(true);
 
-  setActive(true);
+    onActivate?.();
 
-  onActivate?.();
-
-  // Stop previous voice
-  if (audioRef.current) {
-    audioRef.current.pause();
-    audioRef.current.currentTime = 0;
+    /*
+     * Keep the visual activation brief for a normal click.
+     * If RobotAssistant controls speaking state separately,
+     * it can be connected to this state later.
+     */
+    window.setTimeout(() => {
+      setActive(false);
+    }, 1200);
   }
 
-  // First click = intro
-  // Later clicks = joke
-  const audio = new Audio(
-    hasIntroduced
-      ? "/models/jokes.mp3"
-      : "/models/intro.mp3"
-  );
-
-  audioRef.current = audio;
-
-  audio.play().catch((error) => {
-
-    console.error(
-      "Unable to play robot voice:",
-      error
-    );
-
-  });
-
-  setHasIntroduced(true);
-
-  audio.onended = () => {
-    setActive(false);
-  };
-
-}
-
-
   return (
-
-    <Float
-      speed={1}
-      floatIntensity={0.08}
-      rotationIntensity={0.03}
+    <group
+      ref={group}
+      onClick={activate}
     >
-
-      <group
-  ref={group}
-  onClick={activate}
->
-
-        <primitive
-          object={scene}
-          scale={0.52}
-          position={[0, -1.35, 0]}
-        />
-
-      </group>
-
-    </Float>
-
+      <primitive
+        object={scene}
+        scale={0.52}
+        position={[0, -1.35, 0]}
+      />
+    </group>
   );
-
-
 }
-
 
 useGLTF.preload(
-  "/models/robot.glb"
+  "/models/robot.glb",
 );

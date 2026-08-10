@@ -17,7 +17,9 @@ export default defineConfig({
     },
   },
 
-  root: path.resolve(__dirname, "client"),
+  // Keep Vite's HTML entry at the repository root so Vercel can detect this
+  // as a Vite application while source code and static assets stay in client/.
+  publicDir: path.resolve(__dirname, "client", "public"),
 
   build: {
     outDir: path.resolve(__dirname, "dist"),

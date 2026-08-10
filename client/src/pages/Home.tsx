@@ -17,10 +17,14 @@ import {
 import Layout from "@/components/Layout";
 import Robot from "@/components/robot/Robot";
 import { Download } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import RobotAssistant from "@/components/robot/RobotAssistant";
+import type { RobotVisualState } from "@/components/robot/RobotModel";
 
 export default function Home() {
 const [aiMode, setAiMode] = useState(false);
+const [robotState, setRobotState] =
+  useState<RobotVisualState>("ready");
 
 
 const focusAreas = [
@@ -421,56 +425,25 @@ gap-5
   >
 
 <Robot
-onActivate={()=>{
-
-setAiMode(true);
-
-setTimeout(()=>{
-
-setAiMode(false);
-
-},5000)
-
-}}
-
+  state={robotState}
+  frozen={aiMode}
+  onActivate={() => {
+    setAiMode(true);
+  }}
 />
 
-{aiMode && (
-  <div
-    className="
-      fixed
-      z-50
+<RobotAssistant
+  open={aiMode}
 
-      /* MOBILE POSITION */
-      top-[50%]
-      left-1/2
-      -translate-x-1/2
+  onClose={() => {
+    setAiMode(false);
+    setRobotState("ready");
+  }}
 
-      /* ORIGINAL STYLE */
-      px-8
-      py-4
-      rounded-xl
-      bg-black/80
-      border
-      border-cyan-400
-      text-cyan-300
-      font-mono
-      shadow-lg
+  onStateChange={setRobotState}
+/>
 
-      /* DESKTOP — YOUR ORIGINAL POSITION */
-      lg:top-98
-      lg:left-auto
-      lg:right-42
-      lg:-translate-x-12
-    "
-  >
-    J.A.R.V.I.S SYSTEM ONLINE
 
-    <br />
-
-    Security protocols initialized...
-  </div>
-)}
 
 </div>
 

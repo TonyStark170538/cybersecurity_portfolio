@@ -1,14 +1,20 @@
 import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
-import RobotModel from "./RobotModel";
+import RobotModel, {
+  type RobotVisualState,
+} from "./RobotModel";
 
 type Props = {
   onActivate?: () => void;
+  state?: RobotVisualState;
+  frozen?: boolean;
 };
 
 
 export default function Robot({
-  onActivate
+  onActivate,
+  state,
+  frozen,
 }:Props){
 
 
@@ -53,6 +59,8 @@ intensity={1}
 
 <RobotModel
 onActivate={onActivate}
+state={state}
+frozen={frozen}
 />
 
 
