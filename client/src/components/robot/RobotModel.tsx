@@ -1,4 +1,8 @@
-import { useGLTF } from "@react-three/drei";
+import {
+  Float,
+  useAnimations,
+  useGLTF,
+} from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
@@ -7,6 +11,7 @@ type Props = {
   onActivate?: () => void;
   state?: RobotVisualState;
   frozen?: boolean;
+  idleAnimation?: boolean;
 };
 
 export type RobotVisualState =
@@ -18,10 +23,16 @@ export default function RobotModel({
   onActivate,
   state = "ready",
   frozen = false,
+  idleAnimation = true,
 }: Props) {
   const group = useRef<THREE.Group | null>(null);
 
-  const { scene } = useGLTF("/models/robot.glb");
+  const { scene, animations } = useGLTF("/models/robot.glb");
+
+  const { actions } = useAnimations(
+    animations,
+    group,
+  );
 
   const [active, setActive] = useState(false);
 
@@ -50,6 +61,25 @@ export default function RobotModel({
 
     glowing.current = meshes;
   }, [scene]);
+
+  /*
+   * The GLB ships with an authored "Scene" action. Play it while the robot
+   * is waiting for interaction so idle mode has real character animation.
+   */
+  useEffect(() => {
+    const [firstAction] = Object.values(actions);
+    const idleAction = actions.Scene ?? firstAction;
+
+    if (!idleAction) {
+      return;
+    }
+
+    if (idleAnimation) {
+      idleAction.reset().fadeIn(0.35).play();
+    } else {
+      idleAction.fadeOut(0.2);
+    }
+  }, [actions, idleAnimation]);
 
   /*
    * Mouse tracking
@@ -115,7 +145,9 @@ export default function RobotModel({
 
     const isThinking = state === "thinking";
     const isSpeaking = state === "speaking";
-    const isStill = active || (frozen && !isThinking && !isSpeaking);
+    // A frozen state is available for future modal transitions, but normal
+    // activation remains animated: J.A.R.V.I.S. should look awake, not posed.
+    const isStill = frozen && !isThinking && !isSpeaking;
     const isReady = !isThinking && !isSpeaking && !isStill;
     const elapsed = frameState.clock.elapsedTime;
 
@@ -224,16 +256,22 @@ export default function RobotModel({
   }
 
   return (
-    <group
-      ref={group}
-      onClick={activate}
+    <Float
+      speed={frozen ? 0 : 1}
+      floatIntensity={frozen ? 0 : 0.08}
+      rotationIntensity={frozen ? 0 : 0.03}
     >
-      <primitive
-        object={scene}
-        scale={0.52}
-        position={[0, -1.35, 0]}
-      />
-    </group>
+      <group
+        ref={group}
+        onClick={activate}
+      >
+        <primitive
+          object={scene}
+          scale={0.52}
+          position={[0, -1.35, 0]}
+        />
+      </group>
+    </Float>
   );
 }
 

@@ -341,7 +341,7 @@ cybersecurity, cloud infrastructure, and AI-powered applications.
 
 I build projects that combine secure architecture,
 clean user experiences, and engineering practices inspired
-by real-world security teams.
+by real-world security teams. Wanna know more? Click on the Robot.
 
 
 </p>
@@ -426,7 +426,7 @@ gap-5
 
 <Robot
   state={robotState}
-  frozen={aiMode}
+  idleAnimation={!aiMode}
   onActivate={() => {
     setAiMode(true);
   }}

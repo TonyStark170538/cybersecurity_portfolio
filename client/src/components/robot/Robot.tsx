@@ -8,6 +8,7 @@ type Props = {
   onActivate?: () => void;
   state?: RobotVisualState;
   frozen?: boolean;
+  idleAnimation?: boolean;
 };
 
 
@@ -15,6 +16,7 @@ export default function Robot({
   onActivate,
   state,
   frozen,
+  idleAnimation,
 }:Props){
 
 
@@ -61,6 +63,7 @@ intensity={1}
 onActivate={onActivate}
 state={state}
 frozen={frozen}
+idleAnimation={idleAnimation}
 />
 
 
