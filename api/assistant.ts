@@ -10,6 +10,50 @@ type VercelResponse = ServerResponse & {
   json: (body: unknown) => VercelResponse;
 };
 
+type RateLimitEntry = {
+  count: number;
+  resetAt: number;
+};
+
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const MAX_REQUESTS_PER_WINDOW = 10;
+const rateLimits = new Map<string, RateLimitEntry>();
+
+function getClientIp(req: VercelRequest) {
+  const forwarded = req.headers["x-forwarded-for"];
+  const forwardedValue = Array.isArray(forwarded)
+    ? forwarded[0]
+    : forwarded;
+
+  return forwardedValue?.split(",")[0]?.trim() ||
+    req.socket.remoteAddress ||
+    "unknown";
+}
+
+function isRateLimited(clientIp: string) {
+  const now = Date.now();
+
+  rateLimits.forEach((entry, ip) => {
+    if (entry.resetAt <= now) {
+      rateLimits.delete(ip);
+    }
+  });
+
+  const current = rateLimits.get(clientIp);
+
+  if (!current || current.resetAt <= now) {
+    rateLimits.set(clientIp, {
+      count: 1,
+      resetAt: now + RATE_LIMIT_WINDOW_MS,
+    });
+
+    return false;
+  }
+
+  current.count += 1;
+  return current.count > MAX_REQUESTS_PER_WINDOW;
+}
+
 const knowledge = `
 You are J.A.R.V.I.S., the personal AI assistant for Antonina "Toni" Shcherbakova.
 
@@ -102,6 +146,16 @@ export default async function handler(
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "Method not allowed",
+    });
+  }
+
+  const clientIp = getClientIp(req);
+
+  if (isRateLimited(clientIp)) {
+    res.setHeader("Retry-After", "60");
+
+    return res.status(429).json({
+      error: "Too many requests. Please try again shortly.",
     });
   }
 

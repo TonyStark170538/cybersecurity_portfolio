@@ -1,280 +1,189 @@
-# Cybersecurity Specialist Portfolio
+# Toni's Cybersecurity Portfolio
 
-A modern, clean personal portfolio website for a junior cybersecurity and AI engineer. Built with React, Tailwind CSS, and vanilla JavaScript to showcase projects, security expertise, and technical writeups.
+A React and TypeScript portfolio for Antonina (Toni) Shcherbakova, focused on cybersecurity, cloud security, AI engineering, and modern web development. It includes an interactive 3D J.A.R.V.I.S. portfolio assistant that can answer questions about Toni's background and projects and optionally speak its responses.
 
-## Overview
+**Live site:** [cybersecurity-portfolio-snowy.vercel.app](https://cybersecurity-portfolio-snowy.vercel.app/)
 
-This portfolio demonstrates security best practices through both its content and its codebase. It features:
+## Highlights
 
-- **Home**: Hero section with positioning statement and featured projects
-- **Projects**: Comprehensive project case studies with threat modeling and security decisions
-- **Writeups**: Technical articles, CTF walkthroughs, and security research
-- **About**: Security philosophy and background
-- **Responsive Design**: Mobile-first, accessible interface
-- **Dark Theme**: Modern cybersecurity aesthetic with cyan accents
+- Responsive portfolio pages for projects, writeups, about, and contact information.
+- Interactive Three.js robot built with React Three Fiber and Drei.
+- Authored GLB animation plus idle cursor-following, activation, thinking, and speaking visual states.
+- J.A.R.V.I.S. assistant backed by a secure Vercel Function and Groq.
+- Concise, portfolio-specific answers with optional PlayAI WAV speech.
+- Client-side routing with Wouter.
 
-## Tech Stack
+## Architecture
 
-- **Frontend**: React 19 + TypeScript
-- **Styling**: Tailwind CSS 4 + shadcn/ui components
-- **Routing**: Wouter (lightweight client-side router)
-- **Build**: Vite
-- **Fonts**: Outfit (display), Inter (body), JetBrains Mono (code)
+This is a **Vite single-page application with a Vercel serverless function**. It is not an Express or separate custom backend application.
 
-## Getting Started
+```text
+Browser
+  │
+  ├─ Vite / React application
+  │    └─ POST /api/assistant
+  │
+  └─ Vercel Node Function: api/assistant.ts
+       ├─ validates the question
+       ├─ calls Groq Llama 3.3 70B Versatile
+       └─ attempts Groq PlayAI TTS (Fritz-PlayAI)
+```
+
+The Vite HTML entry is the repository-root `index.html`. Application source and public assets remain under `client/`; this is configured in `vite.config.ts` so Vercel detects the application correctly.
+
+## J.A.R.V.I.S. interaction
+
+1. The visitor sees the robot's authored idle/flying animation and subtle cursor response.
+2. Clicking the robot opens `RobotAssistant`.
+3. A submitted question changes the UI and robot to **thinking**.
+4. The browser posts `{ "question": "..." }` to `/api/assistant`.
+5. The function returns an answer and, when TTS succeeds, Base64-encoded WAV audio.
+6. The assistant displays the answer and plays only the current voice response.
+7. During voice playback, the robot enters its **speaking** state; it returns to ready when playback ends or is muted/stopped.
+
+Text responses remain available if text-to-speech fails. Closing the assistant stops audio, revokes its object URL, and prevents an in-flight request from starting background speech.
+
+## Tech stack
+
+- React 19, TypeScript, Vite
+- Tailwind CSS and Radix UI components
+- Wouter routing
+- Three.js, React Three Fiber, React Three Drei
+- Groq SDK: `llama-3.3-70b-versatile` and `playai-tts`
+- Vercel Functions and Vercel hosting
+- React Hook Form, Zod, Formspree, Sonner, Lucide
+
+## Project structure
+
+```text
+.
+├── api/
+│   └── assistant.ts              # Secure Vercel Node Function
+├── client/
+│   ├── public/
+│   │   └── models/robot.glb      # 3D model and authored animation
+│   └── src/
+│       ├── components/robot/
+│       │   ├── Robot.tsx         # Canvas scene
+│       │   ├── RobotModel.tsx    # Model, movement, glow, interactions
+│       │   └── RobotAssistant.tsx# AI request and audio lifecycle
+│       ├── pages/
+│       └── App.tsx
+├── index.html                    # Vite HTML entry
+├── vite.config.ts
+├── vercel.json
+└── package.json
+```
+
+## Routes
+
+| Route | Page |
+| --- | --- |
+| `/` | Home and J.A.R.V.I.S. |
+| `/projects` | Projects |
+| `/projects/:id` | Project detail |
+| `/writeups` | Security writeups |
+| `/about` | About Toni |
+| `/contact` | Contact |
+| `/404` | Not found |
+
+## Setup
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm (or npm)
+- Node.js 18 or later
+- pnpm
 
-### Installation
+### Install
 
 ```bash
-# Install dependencies
 pnpm install
-
-# Start development server
-pnpm dev
-
-# Build for production
-pnpm build
-
-# Preview production build
-pnpm preview
 ```
 
-The development server runs at `http://localhost:3000`.
+### Environment variables
 
-## Project Structure
+Create a local `.env.local` file:
 
-```
-client/
-├── public/              # Static assets (favicon, robots.txt)
-├── src/
-│   ├── components/      # Reusable UI components
-│   │   ├── Header.tsx   # Navigation header
-│   │   ├── Footer.tsx   # Footer with social links
-│   │   ├── Layout.tsx   # Page wrapper
-│   │   └── ui/          # shadcn/ui components
-│   ├── pages/           # Page components
-│   │   ├── Home.tsx     # Hero and featured projects
-│   │   ├── Projects.tsx # All projects grid
-│   │   ├── ProjectDetail.tsx # Case study template
-│   │   ├── Writeups.tsx # Technical articles
-│   │   └── About.tsx    # Security philosophy
-│   ├── App.tsx          # Routes and theme setup
-│   ├── main.tsx         # React entry point
-│   └── index.css        # Global styles and theme
-└── index.html           # HTML template
+```dotenv
+GROQ_API_KEY=your_groq_api_key
 ```
 
-## Security Practices
+Never prefix this key with `VITE_`, commit it, or add it to client-side code. `.env.local` is ignored by Git.
 
-This codebase demonstrates security best practices:
+For deployed environments, add `GROQ_API_KEY` in **Vercel Project Settings → Environment Variables**. Local environment files are not automatically deployed.
 
-### Input Validation & Sanitization
-
-All user inputs are validated and sanitized. While this portfolio doesn't have a contact form, any future forms will include:
-
-```typescript
-// Example: Zod schema for validation
-import { z } from "zod";
-
-const ContactSchema = z.object({
-  name: z.string().min(1).max(100),
-  email: z.string().email(),
-  message: z.string().min(10).max(5000),
-});
-
-// Sanitize before processing
-const sanitized = DOMPurify.sanitize(userInput);
-```
-
-### Secrets Management
-
-- No API keys or secrets are committed to Git
-- Environment variables are used for sensitive data
-- See `.gitignore` for excluded files
-
-### Dependency Auditing
+## Development and verification
 
 ```bash
-# Check for known vulnerabilities
-npm audit
+# Vite frontend only — does not serve Vercel Functions
+pnpm run dev
 
-# Fix vulnerabilities
-npm audit fix
+# Full frontend + /api/assistant Vercel environment
+pnpm exec vercel dev
+
+# TypeScript validation
+pnpm run check
+
+# Production build
+pnpm run build
+
+# Preview the built frontend only
+pnpm run preview
 ```
 
-### Content Security Policy
+`pnpm run dev` normally uses port 3000. For full-stack J.A.R.V.I.S. testing, use `pnpm exec vercel dev` and use the exact port it reports.
 
-The site includes security headers to prevent common attacks:
+Test the function after Vercel Dev starts:
 
-- XSS prevention through React's automatic escaping
-- CSRF protection through SameSite cookies
-- Clickjacking prevention through X-Frame-Options
+```powershell
+Invoke-RestMethod `
+  -Uri "http://localhost:PORT/api/assistant" `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body '{"question":"Who is Toni?"}'
+```
 
-## Customization
+The response shape is:
 
-### Update Personal Information
+```json
+{
+  "answer": "...",
+  "audio": "base64 WAV data or null",
+  "audioType": "audio/wav",
+  "voiceAvailable": true
+}
+```
 
-Edit the following files to add your information:
+## API contract
 
-- `client/src/components/Header.tsx` - Email and social links
-- `client/src/components/Footer.tsx` - Social media URLs
-- `client/src/pages/Home.tsx` - Featured projects
-- `client/src/pages/About.tsx` - Your background and philosophy
+`POST /api/assistant`
 
-### Add Projects
+- Accepts JSON with a `question` string.
+- Rejects malformed JSON, missing/empty questions, and questions longer than 1000 characters.
+- Returns `405 Method not allowed` for non-POST requests.
+- Produces a safe generic availability error if the service cannot respond.
+- TTS errors are handled separately so a valid text answer is still returned.
 
-1. Create a new project entry in `client/src/pages/Projects.tsx`
-2. Add a case study by updating `client/src/pages/ProjectDetail.tsx`
-3. Link to your GitHub repository and live demo
+## Security notes
 
-### Add Writeups
-
-1. Add a new writeup to the list in `client/src/pages/Writeups.tsx`
-2. Create a detail page for the writeup
-3. Include tags for categorization
-
-# Interactive Cybersecurity AI Robot
-
-## Overview
-
-I built an interactive 3D cybersecurity assistant as part of my
-portfolio website.
-
-The experience uses React Three Fiber and a GLB robot model
-embedded directly into the homepage.
-
-The robot is designed to feel like an interactive security assistant
-rather than a static 3D decoration.
-
-## Interactions
-
-The robot reacts to the user's cursor and follows its movement
-using smooth interpolation.
-
-Users can also click the robot to activate it.
-
-The first interaction triggers an introduction voice response,
-while subsequent interactions can trigger a secondary response.
-
-The robot also uses subtle floating and animation to create a
-continuous sense of activity.
-
-## Technology
-
-- React
-- TypeScript
-- React Three Fiber
-- Three.js
-- Drei
-- GLB 3D model
-- Web Audio
-
-## Performance
-
-The 3D experience is lazy-loaded so the Three.js scene does not
-block the initial page rendering.
-
-A loading fallback is displayed while the 3D experience initializes.
-
-The experience detects users who prefer reduced motion and provides
-a static fallback instead of running the animated 3D scene.
-
-Basic device capability detection is also used to avoid loading
-the experience on lower-powered devices.
-
-The scene uses simple lighting and limited animation rather than
-expensive post-processing effects.
-
-## Accessibility
-
-Users who enable `prefers-reduced-motion` receive a static fallback.
-
-The interaction is designed to work with pointer and touch input.
-
-## FE-10 Performance Reflection
-
-The main performance cost comes from loading and rendering the
-3D model and maintaining the animation loop.
-
-To keep the experience lightweight, I lazy-loaded the Canvas,
-limited the number of lights and effects, avoided expensive
-post-processing, and added fallbacks for reduced-motion and
-lower-powered devices.
-
-## Future Improvements
-
-With more time I would:
-
-- Compress the GLB using Draco or Meshopt if further optimization
-  is needed.
-- Add more interaction states.
-- Add additional robot animations.
-- Measure frame rate and GPU usage on a wider range of mobile devices.
-- Add a more sophisticated loading experience.
-
-### Customize Theme
-
-Edit `client/src/index.css` to change:
-
-- Color palette (OKLCH format)
-- Typography (font families and sizes)
-- Spacing and border radius
-- Dark/light theme values
-
-## Accessibility
-
-This portfolio follows web accessibility best practices:
-
-- Semantic HTML structure
-- Proper heading hierarchy (H1 → H6)
-- Alt text on images (when applicable)
-- Sufficient color contrast (WCAG AA)
-- Keyboard navigation support
-- Focus indicators on interactive elements
-- ARIA labels where needed
-
-## Performance
-
-- Optimized images and assets
-- Minimal JavaScript bundle
-- CSS-in-JS with Tailwind for efficient styling
-- Fast page transitions with Wouter
-- No unnecessary dependencies
+- `GROQ_API_KEY` is read only in `api/assistant.ts`, never by browser code.
+- No Groq request is made directly from the browser.
+- The API key is excluded through `.gitignore` and is not part of the Vite bundle.
+- Input length is capped at 1000 characters.
+- The function applies a per-instance, per-IP limit of 10 requests per minute and returns `429` with `Retry-After` when exceeded.
+- Server errors are logged server-side without returning secrets or provider internals to visitors.
+- The assistant prompt is constrained to Toni's documented portfolio information and instructs the model not to invent experience or credentials.
 
 ## Deployment
 
-### Build for Production
+Deploy through the connected Vercel project or with the Vercel CLI:
 
 ```bash
-pnpm build
+pnpm exec vercel --prod
 ```
 
-The production build is optimized and ready for deployment.
-
-### Hosting Options
-
-- **Manus**: Built-in hosting with custom domain support
-- **Vercel**: Zero-config deployment
-- **Netlify**: Drag-and-drop deployment
-- **GitHub Pages**: Free static hosting
-
-## Contributing
-
-This is a personal portfolio, but feel free to fork and customize for your own use.
+Before deploying, set `GROQ_API_KEY` in Vercel for the relevant environment. Vercel serves the Vite build and automatically exposes `api/assistant.ts` as `/api/assistant`; `vercel.json` preserves API routing before the SPA fallback.
 
 ## License
 
-MIT License - feel free to use this as a template for your own portfolio.
-
-## Support
-
-For issues or questions about the portfolio, please open an issue or contact me through the website.
-
----
-
-**Built with security and design in mind.** 🔐
+MIT
