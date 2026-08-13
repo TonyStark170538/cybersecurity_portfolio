@@ -190,12 +190,14 @@ export default async function handler(
      */
 
     const speech =
-      await groq.audio.speech.create({
-        model: "playai-tts",
-        voice: "Fritz-PlayAI",
-        input: reaction,
-        response_format: "wav",
-      });
+  await groq.audio.speech.create({
+    model:
+      "canopylabs/orpheus-v1-english",
+    voice:
+      "troy",
+    input: reaction,
+    response_format: "wav",
+  });
 
     const audioBuffer = Buffer.from(
       await speech.arrayBuffer(),

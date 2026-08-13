@@ -493,21 +493,19 @@ export default async function handler(
       );
 
       const speech =
-        await groq.audio.speech.create(
-          {
-            model:
-              "playai-tts",
+  await groq.audio.speech.create({
+    model:
+      "canopylabs/orpheus-v1-english",
 
-            voice:
-              "Fritz-PlayAI",
+    voice:
+      "troy",
 
-            input:
-              finalAnswer,
+    input:
+      finalAnswer,
 
-            response_format:
-              "wav",
-          },
-        );
+    response_format:
+      "wav",
+  });
 
       const audioArrayBuffer =
         await speech.arrayBuffer();
@@ -538,26 +536,18 @@ export default async function handler(
         audioType:
           "audio/wav",
       });
-    } catch (
-      speechError
-    ) {
-      console.error(
-        "J.A.R.V.I.S. TTS error:",
-        speechError,
-      );
+} catch (speechError) {
+  console.error(
+    "J.A.R.V.I.S. TTS error:",
+    speechError,
+  );
 
-      /*
-       * Text still works even when
-       * TTS fails.
-       */
-
-      sendEvent(res, {
-        type: "audio",
-        audio: null,
-        audioType:
-          "audio/wav",
-      });
-    }
+  sendEvent(res, {
+    type: "audio",
+    audio: null,
+    audioType: "audio/wav",
+  });
+}
 
     sendEvent(res, {
       type: "complete",
