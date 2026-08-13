@@ -17,7 +17,10 @@ import {
 import Layout from "@/components/Layout";
 import Robot from "@/components/robot/Robot";
 import { Download } from "lucide-react";
-import { useState } from "react";
+import {
+  useRef,
+  useState,
+} from "react";
 import RobotAssistant from "@/components/robot/RobotAssistant";
 import type { RobotVisualState } from "@/components/robot/RobotModel";
 
@@ -26,7 +29,153 @@ const [aiMode, setAiMode] = useState(false);
 const [robotState, setRobotState] =
   useState<RobotVisualState>("ready");
 
+const [reactionPlaying, setReactionPlaying] =
+  useState(false);
 
+const reactionCooldownRef =
+  useRef(0);
+
+async function triggerRobotReaction(
+  context:
+    | "projects"
+    | "contact"
+    | "cv"
+    | "skills"
+    | "about"
+    | "security"
+    | "ai"
+    | "pink-panther"
+    | "jarvis"
+    | "terminal"
+    | "general",
+  project?: string,
+) {
+  /*
+   * Don't react constantly.
+   *
+   * Roughly 35% of eligible interactions
+   * will trigger a reaction.
+   */
+
+  if (
+    reactionPlaying ||
+    Date.now() <
+      reactionCooldownRef.current
+  ) {
+    return;
+  }
+
+  if (Math.random() > 0.35) {
+    return;
+  }
+
+  reactionCooldownRef.current =
+    Date.now() + 7000;
+
+  setReactionPlaying(true);
+  setRobotState("speaking");
+
+  try {
+    const response =
+      await fetch(
+        "/api/robot-reaction",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+            context,
+            project,
+          }),
+        },
+      );
+
+    if (!response.ok) {
+      throw new Error(
+        "Robot reaction failed.",
+      );
+    }
+
+    const data =
+      await response.json();
+
+    if (
+      !data.audio
+    ) {
+      throw new Error(
+        "No reaction audio received.",
+      );
+    }
+
+    const byteCharacters =
+      atob(data.audio);
+
+    const byteNumbers =
+      new Array(
+        byteCharacters.length,
+      );
+
+    for (
+      let i = 0;
+      i < byteCharacters.length;
+      i++
+    ) {
+      byteNumbers[i] =
+        byteCharacters.charCodeAt(
+          i,
+        );
+    }
+
+    const byteArray =
+      new Uint8Array(
+        byteNumbers,
+      );
+
+    const blob =
+      new Blob(
+        [byteArray],
+        {
+          type:
+            data.audioType ||
+            "audio/wav",
+        },
+      );
+
+    const url =
+      URL.createObjectURL(blob);
+
+    const audio =
+      new Audio(url);
+
+    audio.onended = () => {
+      URL.revokeObjectURL(url);
+
+      setReactionPlaying(false);
+      setRobotState("ready");
+    };
+
+    audio.onerror = () => {
+      URL.revokeObjectURL(url);
+
+      setReactionPlaying(false);
+      setRobotState("ready");
+    };
+
+    await audio.play();
+  } catch (error) {
+    console.error(
+      "Robot reaction error:",
+      error,
+    );
+
+    setReactionPlaying(false);
+    setRobotState("ready");
+  }
+}
 const focusAreas = [
 
 {
@@ -361,11 +510,10 @@ gap-5
 
 <Link
   href="/projects"
-  onClick={()=>{
-    const audio = new Audio("/models/projects.mp3");
-    audio.play().catch((error)=>{
-      console.error("Unable to play robot voice:", error);
-    });
+  onClick={() => {
+    triggerRobotReaction(
+      "projects",
+    );
   }}
   className="stark-button inline-flex items-center gap-3 px-7 py-3"
 >
@@ -382,6 +530,11 @@ gap-5
   download="Antonina_Shcherbakova_CV.pdf"
   target="_blank"
   rel="noopener noreferrer"
+  onClick={() => {
+    triggerRobotReaction(
+      "cv",
+    );
+  }}
   className="stark-button inline-flex items-center gap-3 px-7 py-3 cursor-pointer"
 >
   <Download size={18} />
@@ -425,9 +578,20 @@ gap-5
   >
 
 <Robot
-  state={robotState}
-  idleAnimation={!aiMode}
+  state={
+    reactionPlaying
+      ? "speaking"
+      : robotState
+  }
+  idleAnimation={
+    !aiMode &&
+    !reactionPlaying
+  }
   onActivate={() => {
+    if (reactionPlaying) {
+      return;
+    }
+
     setAiMode(true);
   }}
 />
@@ -946,11 +1110,32 @@ projects.map(project=>(
 <Link
   href={project.href}
   key={project.title}
-  onClick={()=>{
-    const audio = new Audio("/models/projects.mp3");
-    audio.play().catch((error)=>{
-      console.error("Unable to play robot voice:", error);
-    });
+  onClick={() => {
+    if (
+      project.title ===
+      "AI Portfolio Terminal"
+    ) {
+      triggerRobotReaction(
+        "terminal",
+        project.title,
+      );
+    } else if (
+      project.title ===
+      "J.A.R.V.I.S. Cybersecurity Platform"
+    ) {
+      triggerRobotReaction(
+        "jarvis",
+        project.title,
+      );
+    } else if (
+      project.title ===
+      "Pink Panther"
+    ) {
+      triggerRobotReaction(
+        "pink-panther",
+        project.title,
+      );
+    }
   }}
 >
 
