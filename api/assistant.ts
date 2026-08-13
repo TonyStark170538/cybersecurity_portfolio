@@ -15,19 +15,32 @@ type RateLimitEntry = {
   resetAt: number;
 };
 
+type ConversationMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const MAX_REQUESTS_PER_WINDOW = 10;
+
+const MAX_QUESTION_LENGTH = 1000;
+const MAX_HISTORY_MESSAGES = 8;
+const MAX_HISTORY_MESSAGE_LENGTH = 2000;
+
 const rateLimits = new Map<string, RateLimitEntry>();
 
 function getClientIp(req: VercelRequest) {
   const forwarded = req.headers["x-forwarded-for"];
+
   const forwardedValue = Array.isArray(forwarded)
     ? forwarded[0]
     : forwarded;
 
-  return forwardedValue?.split(",")[0]?.trim() ||
+  return (
+    forwardedValue?.split(",")[0]?.trim() ||
     req.socket.remoteAddress ||
-    "unknown";
+    "unknown"
+  );
 }
 
 function isRateLimited(clientIp: string) {
@@ -51,7 +64,27 @@ function isRateLimited(clientIp: string) {
   }
 
   current.count += 1;
+
   return current.count > MAX_REQUESTS_PER_WINDOW;
+}
+
+function isConversationMessage(
+  value: unknown,
+): value is ConversationMessage {
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    !("role" in value) ||
+    !("content" in value)
+  ) {
+    return false;
+  }
+
+  return (
+    (value.role === "user" ||
+      value.role === "assistant") &&
+    typeof value.content === "string"
+  );
 }
 
 const knowledge = `
@@ -59,7 +92,8 @@ You are J.A.R.V.I.S., the personal AI assistant for Antonina "Toni" Shcherbakova
 
 PERSONALITY:
 Curious, direct, practical, security-first, honest, approachable.
-Speak naturally. You are an intelligent portfolio assistant, not a corporate chatbot.
+Speak naturally.
+You are an intelligent portfolio assistant, not a corporate chatbot.
 
 ABOUT TONI:
 Toni is a software engineering student focused on cloud security,
@@ -139,6 +173,15 @@ IMPORTANT RULES:
    rather than simply listing technologies.
 `;
 
+function sendEvent(
+  res: VercelResponse,
+  payload: unknown,
+) {
+  res.write(
+    `data: ${JSON.stringify(payload)}\n\n`,
+  );
+}
+
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse,
@@ -155,19 +198,23 @@ export default async function handler(
     res.setHeader("Retry-After", "60");
 
     return res.status(429).json({
-      error: "Too many requests. Please try again shortly.",
+      error:
+        "Too many requests. Please try again shortly.",
+    });
+  }
+
+  if (!process.env.GROQ_API_KEY) {
+    console.error(
+      "GROQ_API_KEY is not configured.",
+    );
+
+    return res.status(500).json({
+      error:
+        "The AI assistant is temporarily unavailable.",
     });
   }
 
   try {
-    if (!process.env.GROQ_API_KEY) {
-      console.error("GROQ_API_KEY is not configured.");
-
-      return res.status(500).json({
-        error: "The AI assistant is temporarily unavailable.",
-      });
-    }
-
     let body: unknown = req.body;
 
     if (typeof body === "string") {
@@ -175,17 +222,29 @@ export default async function handler(
         body = JSON.parse(body);
       } catch {
         return res.status(400).json({
-          error: "Request body must be valid JSON.",
+          error:
+            "Request body must be valid JSON.",
         });
       }
     }
 
+    if (
+      typeof body !== "object" ||
+      body === null
+    ) {
+      return res.status(400).json({
+        error: "Invalid request body.",
+      });
+    }
+
+    const bodyRecord = body as Record<
+      string,
+      unknown
+    >;
+
     const question =
-      typeof body === "object" &&
-      body !== null &&
-      "question" in body &&
-      typeof body.question === "string"
-        ? body.question.trim()
+      typeof bodyRecord.question === "string"
+        ? bodyRecord.question.trim()
         : "";
 
     if (!question) {
@@ -194,85 +253,200 @@ export default async function handler(
       });
     }
 
-    if (question.length > 1000) {
+    if (
+      question.length >
+      MAX_QUESTION_LENGTH
+    ) {
       return res.status(400).json({
         error: "Question is too long.",
       });
     }
 
-    // This constructor is intentionally server-only. api/ is a Vercel Node
-    // Function, where Buffer is available for the binary TTS response.
+    const rawHistory =
+      Array.isArray(bodyRecord.history)
+        ? bodyRecord.history
+        : [];
+
+    const history: ConversationMessage[] =
+      rawHistory
+        .filter(isConversationMessage)
+        .map((message) => ({
+          role: message.role,
+          content: message.content.trim(),
+        }))
+        .filter(
+          (message) =>
+            message.content.length > 0 &&
+            message.content.length <=
+              MAX_HISTORY_MESSAGE_LENGTH,
+        )
+        .slice(-MAX_HISTORY_MESSAGES);
+
     const groq = new Groq({
       apiKey: process.env.GROQ_API_KEY,
     });
 
-    const completion =
+    const messages = [
+      {
+        role: "system" as const,
+        content: knowledge,
+      },
+
+      ...history,
+
+      {
+        role: "user" as const,
+        content: question,
+      },
+    ];
+
+    const stream =
       await groq.chat.completions.create({
         model: "llama-3.3-70b-versatile",
 
-        messages: [
-          {
-            role: "system",
-            content: knowledge,
-          },
-          {
-            role: "user",
-            content: question,
-          },
-        ],
+        messages,
 
         temperature: 0.4,
-        max_tokens: 250,
+
+        max_completion_tokens: 250,
+
+        stream: true,
       });
 
-    const answer =
-      completion.choices[0]?.message?.content?.trim();
+    res.statusCode = 200;
 
-    if (!answer) {
-      throw new Error(
-        "Groq returned an empty response.",
-      );
+    res.setHeader(
+      "Content-Type",
+      "text/event-stream; charset=utf-8",
+    );
+
+    res.setHeader(
+      "Cache-Control",
+      "no-cache, no-transform",
+    );
+
+    res.setHeader(
+      "Connection",
+      "keep-alive",
+    );
+
+    res.setHeader(
+      "X-Accel-Buffering",
+      "no",
+    );
+
+    let answer = "";
+
+    for await (const chunk of stream) {
+      const text =
+        chunk.choices[0]?.delta?.content ?? "";
+
+      if (!text) {
+        continue;
+      }
+
+      answer += text;
+
+      sendEvent(res, {
+        type: "chunk",
+        text,
+      });
     }
 
-    let audioBase64: string | null = null;
+    if (!answer.trim()) {
+      sendEvent(res, {
+        type: "error",
+        error: "No AI response received.",
+      });
+
+      res.end();
+      return;
+    }
+
+    /*
+     * The AI text is now completely generated.
+     *
+     * The browser has already received the streamed
+     * chunks above.
+     */
+
+    sendEvent(res, {
+      type: "done",
+      answer: answer.trim(),
+    });
+
+    /*
+     * Keep the existing Groq TTS architecture.
+     *
+     * TTS is intentionally NOT streaming.
+     * It runs after the complete answer exists.
+     */
 
     try {
       const speech =
         await groq.audio.speech.create({
           model: "playai-tts",
           voice: "Fritz-PlayAI",
-          input: answer,
+          input: answer.trim(),
           response_format: "wav",
         });
 
-      const audioBuffer =
-        Buffer.from(
-          await speech.arrayBuffer(),
-        );
+      const audioBuffer = Buffer.from(
+        await speech.arrayBuffer(),
+      );
 
-      audioBase64 =
-        audioBuffer.toString("base64");
+      sendEvent(res, {
+        type: "audio",
+        audio: audioBuffer.toString(
+          "base64",
+        ),
+        audioType: "audio/wav",
+      });
     } catch (speechError) {
       console.error(
         "J.A.R.V.I.S. TTS error:",
         speechError,
       );
+
+      /*
+       * Text response succeeded.
+       * TTS failure must not destroy it.
+       */
+
+      sendEvent(res, {
+        type: "audio",
+        audio: null,
+        audioType: "audio/wav",
+      });
     }
 
-    return res.status(200).json({
-      answer,
-      audio: audioBase64,
-      audioType: "audio/wav",
-      voiceAvailable: Boolean(audioBase64),
+    sendEvent(res, {
+      type: "complete",
     });
+
+    res.end();
   } catch (error) {
     console.error(
       "J.A.R.V.I.S. AI error:",
       error,
     );
 
-    return res.status(500).json({
-      error: "The AI assistant is temporarily unavailable.",
-    });
+    /*
+     * If streaming has already started, send
+     * a stream error rather than attempting to
+     * send another HTTP JSON response.
+     */
+
+    try {
+      sendEvent(res, {
+        type: "error",
+        error:
+          "The AI assistant is temporarily unavailable.",
+      });
+
+      res.end();
+    } catch {
+      res.end();
+    }
   }
 }

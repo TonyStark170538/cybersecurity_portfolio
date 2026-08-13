@@ -17,12 +17,45 @@ type RobotState =
   | "thinking"
   | "speaking";
 
+type ConversationMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
+type StreamEvent =
+  | {
+      type: "chunk";
+      text: string;
+    }
+  | {
+      type: "done";
+      answer: string;
+    }
+  | {
+      type: "audio";
+      audio: string | null;
+      audioType: string;
+    }
+  | {
+      type: "complete";
+    }
+  | {
+      type: "error";
+      error: string;
+    };
+
 type Props = {
   open: boolean;
   onClose: () => void;
-  onSpeakingChange?: (speaking: boolean) => void;
-  onStateChange?: (state: RobotState) => void;
+  onSpeakingChange?: (
+    speaking: boolean,
+  ) => void;
+  onStateChange?: (
+    state: RobotState,
+  ) => void;
 };
+
+const MAX_CONVERSATION_MESSAGES = 8;
 
 export default function RobotAssistant({
   open,
@@ -30,7 +63,9 @@ export default function RobotAssistant({
   onSpeakingChange,
   onStateChange,
 }: Props) {
-  const [input, setInput] = useState("");
+  const [input, setInput] =
+    useState("");
+
   const [state, setState] =
     useState<RobotState>("ready");
 
@@ -40,55 +75,77 @@ export default function RobotAssistant({
   const [voiceEnabled, setVoiceEnabled] =
     useState(true);
 
+  const [conversation, setConversation] =
+    useState<ConversationMessage[]>([]);
+
   const audioRef =
-    useRef<HTMLAudioElement | null>(null);
+    useRef<HTMLAudioElement | null>(
+      null,
+    );
 
   const audioUrlRef =
     useRef<string | null>(null);
 
-  const requestIdRef = useRef(0);
+  const requestIdRef =
+    useRef(0);
+
+  const abortControllerRef =
+    useRef<AbortController | null>(
+      null,
+    );
+
+  const voiceEnabledRef =
+    useRef(true);
+
+  useEffect(() => {
+    voiceEnabledRef.current =
+      voiceEnabled;
+  }, [voiceEnabled]);
 
   /*
-   * ------------------------------------------
-   * CLEANUP
-   * ------------------------------------------
+   * Cleanup when component unmounts.
    */
 
   useEffect(() => {
     return () => {
       requestIdRef.current += 1;
-      stopSpeaking();
+
+      abortControllerRef.current?.abort();
+
+      cleanupAudio();
     };
   }, []);
 
   /*
-   * ------------------------------------------
-   * INFORM ROBOT WHEN SPEAKING
-   * ------------------------------------------
+   * Synchronize robot visual state.
    */
 
   useEffect(() => {
     onSpeakingChange?.(
-      state === "speaking"
+      state === "speaking",
     );
+
     onStateChange?.(state);
-  }, [state, onSpeakingChange, onStateChange]);
+  }, [
+    state,
+    onSpeakingChange,
+    onStateChange,
+  ]);
 
   /*
-   * ------------------------------------------
    * BASE64 → AUDIO
-   * ------------------------------------------
    */
 
   function base64ToBlob(
     base64: string,
-    mimeType: string
+    mimeType: string,
   ) {
     const byteCharacters =
       atob(base64);
 
-    const byteNumbers =
-      new Array(byteCharacters.length);
+    const byteNumbers = new Array(
+      byteCharacters.length,
+    );
 
     for (
       let i = 0;
@@ -104,32 +161,64 @@ export default function RobotAssistant({
 
     return new Blob(
       [byteArray],
-      { type: mimeType }
+      {
+        type: mimeType,
+      },
     );
   }
 
   /*
-   * ------------------------------------------
+   * CLEAN AUDIO
+   */
+
+  function cleanupAudio() {
+    if (audioRef.current) {
+      audioRef.current.onended = null;
+      audioRef.current.onerror = null;
+
+      audioRef.current.pause();
+
+      audioRef.current.currentTime = 0;
+
+      audioRef.current = null;
+    }
+
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(
+        audioUrlRef.current,
+      );
+
+      audioUrlRef.current = null;
+    }
+  }
+
+  /*
    * PLAY J.A.R.V.I.S. VOICE
-   * ------------------------------------------
    */
 
   async function speak(
     audioBase64: string,
-    audioType: string
+    audioType: string,
+    requestId: number,
   ) {
-    if (!voiceEnabled) {
+    if (!voiceEnabledRef.current) {
       setState("ready");
       return;
     }
 
+    if (
+      requestId !== requestIdRef.current
+    ) {
+      return;
+    }
+
     try {
-      stopSpeaking();
+      cleanupAudio();
 
       const blob =
         base64ToBlob(
           audioBase64,
-          audioType || "audio/wav"
+          audioType || "audio/wav",
         );
 
       const audioUrl =
@@ -144,62 +233,110 @@ export default function RobotAssistant({
       audioRef.current =
         audio;
 
+      if (
+        requestId !==
+        requestIdRef.current
+      ) {
+        cleanupAudio();
+        return;
+      }
+
       setState("speaking");
 
       audio.onended = () => {
         cleanupAudio();
-        setState("ready");
+
+        if (
+          requestId ===
+          requestIdRef.current
+        ) {
+          setState("ready");
+        }
       };
 
       audio.onerror = () => {
         cleanupAudio();
-        setState("ready");
+
+        if (
+          requestId ===
+          requestIdRef.current
+        ) {
+          setState("ready");
+        }
       };
 
       await audio.play();
-
     } catch (error) {
       console.error(
         "J.A.R.V.I.S. voice error:",
-        error
+        error,
       );
 
       cleanupAudio();
-      setState("ready");
+
+      if (
+        requestId ===
+        requestIdRef.current
+      ) {
+        setState("ready");
+      }
     }
   }
 
   /*
-   * ------------------------------------------
-   * CLEAN AUDIO
-   * ------------------------------------------
+   * STOP SPEAKING
    */
 
-  function cleanupAudio() {
-    if (audioRef.current) {
-      audioRef.current.onended = null;
-      audioRef.current.onerror = null;
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
+  function stopSpeaking() {
+    cleanupAudio();
 
-    if (audioUrlRef.current) {
-      URL.revokeObjectURL(
-        audioUrlRef.current
+    setState("ready");
+  }
+
+  /*
+   * PARSE ONE SSE EVENT
+   */
+
+  function parseStreamEvent(
+    rawEvent: string,
+  ): StreamEvent | null {
+    const lines =
+      rawEvent.split("\n");
+
+    const dataLines = lines
+      .filter((line) =>
+        line.startsWith("data:"),
+      )
+      .map((line) =>
+        line.slice(5).trim(),
       );
 
-      audioUrlRef.current = null;
+    if (dataLines.length === 0) {
+      return null;
+    }
+
+    const data = dataLines.join("\n");
+
+    try {
+      return JSON.parse(
+        data,
+      ) as StreamEvent;
+    } catch {
+      console.warn(
+        "Unable to parse J.A.R.V.I.S. stream event:",
+        data,
+      );
+
+      return null;
     }
   }
 
   /*
-   * ------------------------------------------
    * SEND QUESTION
-   * ------------------------------------------
    */
 
   async function sendMessage(
-    event: FormEvent
+    event: FormEvent,
   ) {
     event.preventDefault();
 
@@ -214,12 +351,43 @@ export default function RobotAssistant({
       return;
     }
 
+    /*
+     * Invalidate any previous request.
+     */
+
+    abortControllerRef.current?.abort();
+
+    const controller =
+      new AbortController();
+
+    abortControllerRef.current =
+      controller;
+
+    const requestId =
+      requestIdRef.current + 1;
+
+    requestIdRef.current =
+      requestId;
+
     setInput("");
     setTranscript("");
     setState("thinking");
 
-    const requestId = requestIdRef.current + 1;
-    requestIdRef.current = requestId;
+    /*
+     * Keep the current session context.
+     *
+     * Do NOT add the current question here.
+     * The server receives it separately.
+     */
+
+    const history =
+      conversation.slice(
+        -MAX_CONVERSATION_MESSAGES,
+      );
+
+    let streamedAnswer = "";
+    let responseCompleted = false;
+    let audioReceived = false;
 
     try {
       const response =
@@ -231,139 +399,381 @@ export default function RobotAssistant({
             headers: {
               "Content-Type":
                 "application/json",
+
+              Accept:
+                "text/event-stream",
             },
+
+            signal:
+              controller.signal,
 
             body: JSON.stringify({
               question,
+              history,
             }),
-          }
+          },
         );
 
-      const responseText =
-        await response.text();
-
-      let data: unknown = null;
-
-      if (responseText) {
-        try {
-          data = JSON.parse(responseText);
-        } catch {
-          throw new Error(
-            "The AI assistant is temporarily unavailable."
-          );
-        }
-      }
-
-      // Closing the assistant invalidates an in-flight request. Its eventual
-      // response must never restart speech in the background.
-      if (requestId !== requestIdRef.current) {
+      if (
+        requestId !==
+        requestIdRef.current
+      ) {
         return;
       }
 
       if (!response.ok) {
+        let errorMessage =
+          "AI service unavailable.";
+
+        try {
+          const errorData =
+            await response.json();
+
+          if (
+            typeof errorData ===
+              "object" &&
+            errorData !== null &&
+            "error" in errorData &&
+            typeof errorData.error ===
+              "string"
+          ) {
+            errorMessage =
+              errorData.error;
+          }
+        } catch {
+          // Keep fallback error.
+        }
+
         throw new Error(
-          typeof data === "object" &&
-          data !== null &&
-          "error" in data &&
-          typeof data.error === "string"
-            ? data.error
-            :
-          "AI service unavailable."
+          errorMessage,
         );
       }
 
-      const answer =
-        typeof data === "object" &&
-        data !== null &&
-        "answer" in data &&
-        typeof data.answer === "string"
-          ? data.answer.trim()
-          : "";
-
-      if (!answer) {
+      if (!response.body) {
         throw new Error(
-          "No AI response received."
+          "Streaming is not available.",
         );
       }
 
-      setTranscript(answer);
+      const reader =
+        response.body.getReader();
+
+      const decoder =
+        new TextDecoder();
+
+      let buffer = "";
+
+      while (true) {
+        const {
+          value,
+          done,
+        } = await reader.read();
+
+        if (
+          requestId !==
+          requestIdRef.current
+        ) {
+          reader.cancel().catch(() => {});
+          return;
+        }
+
+        if (done) {
+          break;
+        }
+
+        buffer += decoder.decode(
+          value,
+          {
+            stream: true,
+          },
+        );
+
+        const events =
+          buffer.split(
+            "\n\n",
+          );
+
+        buffer =
+          events.pop() ?? "";
+
+        for (const rawEvent of events) {
+          if (
+            requestId !==
+            requestIdRef.current
+          ) {
+            return;
+          }
+
+          const streamEvent =
+            parseStreamEvent(
+              rawEvent,
+            );
+
+          if (!streamEvent) {
+            continue;
+          }
+
+          switch (
+            streamEvent.type
+          ) {
+            case "chunk": {
+              streamedAnswer +=
+                streamEvent.text;
+
+              /*
+               * THIS is the actual
+               * visible streaming behavior.
+               */
+
+              setTranscript(
+                streamedAnswer,
+              );
+
+              break;
+            }
+
+            case "done": {
+              const finalAnswer =
+                streamEvent.answer.trim();
+
+              if (finalAnswer) {
+                streamedAnswer =
+                  finalAnswer;
+
+                setTranscript(
+                  finalAnswer,
+                );
+
+                responseCompleted =
+                  true;
+
+                /*
+                 * Add the completed turn
+                 * to temporary session state.
+                 *
+                 * It is NOT persisted anywhere.
+                 */
+
+                setConversation(
+                  (previous) => {
+                    const next = [
+                      ...previous,
+                      {
+                        role: "user" as const,
+                        content: question,
+                      },
+                      {
+                        role: "assistant" as const,
+                        content:
+                          finalAnswer,
+                      },
+                    ];
+
+                    return next.slice(
+                      -MAX_CONVERSATION_MESSAGES,
+                    );
+                  },
+                );
+              }
+
+              break;
+            }
+
+            case "audio": {
+              if (
+                !responseCompleted
+              ) {
+                break;
+              }
+
+              if (
+                requestId !==
+                requestIdRef.current
+              ) {
+                return;
+              }
+
+              if (
+                streamEvent.audio
+              ) {
+                audioReceived = true;
+
+                await speak(
+                  streamEvent.audio,
+                  streamEvent.audioType ||
+                    "audio/wav",
+                  requestId,
+                );
+              } else {
+                setState("ready");
+              }
+
+              break;
+            }
+
+            case "complete": {
+              /*
+               * If voice is disabled or TTS
+               * failed, finish cleanly.
+               */
+
+              if (
+                requestId ===
+                  requestIdRef.current &&
+                !audioReceived
+              ) {
+                setState("ready");
+              }
+
+              break;
+            }
+
+            case "error": {
+              throw new Error(
+                streamEvent.error ||
+                  "AI service unavailable.",
+              );
+            }
+          }
+        }
+      }
 
       /*
-       * New API returns audio
-       * together with the answer.
+       * Handle any final buffered SSE event.
+       */
+
+      if (buffer.trim()) {
+        const streamEvent =
+          parseStreamEvent(
+            buffer,
+          );
+
+        if (
+          streamEvent?.type ===
+          "chunk"
+        ) {
+          streamedAnswer +=
+            streamEvent.text;
+
+          setTranscript(
+            streamedAnswer,
+          );
+        }
+      }
+
+      /*
+       * Fallback in case the backend
+       * completed without sending audio.
        */
 
       if (
-        typeof data === "object" &&
-        data !== null &&
-        "audio" in data &&
-        typeof data.audio === "string" &&
-        data.audio.length > 0
+        requestId ===
+          requestIdRef.current &&
+        responseCompleted &&
+        !audioReceived &&
+        !voiceEnabledRef.current
       ) {
-        await speak(
-          data.audio,
-          "audioType" in data &&
-          typeof data.audioType === "string"
-            ? data.audioType
-            :
-            "audio/wav"
-        );
-      } else {
-        /*
-         * Text still works if TTS
-         * temporarily fails.
-         */
-
         setState("ready");
       }
-
     } catch (error) {
+      if (
+        controller.signal.aborted ||
+        requestId !==
+          requestIdRef.current
+      ) {
+        return;
+      }
+
       console.error(
         "J.A.R.V.I.S. error:",
-        error
+        error,
       );
 
       setTranscript(
         error instanceof Error
           ? error.message
-          : "I'm having trouble connecting to my AI system right now."
+          : "I'm having trouble connecting to my AI system right now.",
       );
 
       setState("ready");
+    } finally {
+      if (
+        requestId ===
+        requestIdRef.current
+      ) {
+        abortControllerRef.current =
+          null;
+      }
     }
   }
 
   /*
-   * ------------------------------------------
-   * STOP SPEAKING
-   * ------------------------------------------
-   */
-
-  function stopSpeaking() {
-    cleanupAudio();
-    setState("ready");
-  }
-
-  /*
-   * ------------------------------------------
-   * CLOSE
-   * ------------------------------------------
+   * CLOSE ASSISTANT
    */
 
   function closeAssistant() {
+    /*
+     * Make every outstanding async
+     * callback stale immediately.
+     */
+
     requestIdRef.current += 1;
-    stopSpeaking();
+
+    /*
+     * Abort network request.
+     */
+
+    abortControllerRef.current?.abort();
+
+    abortControllerRef.current =
+      null;
+
+    /*
+     * Stop audio immediately.
+     */
+
+    cleanupAudio();
+
+    /*
+     * IMPORTANT:
+     * The temporary conversation disappears
+     * when this interaction closes.
+     */
+
+    setConversation([]);
 
     setTranscript("");
     setInput("");
+    setState("ready");
 
     onClose();
   }
 
   /*
-   * ------------------------------------------
-   * DON'T RENDER WHEN CLOSED
-   * ------------------------------------------
+   * If muted while speaking,
+   * stop current speech.
+   */
+
+  function toggleVoice() {
+    if (state === "speaking") {
+      stopSpeaking();
+    }
+
+    setVoiceEnabled(
+      (current) => {
+        const next =
+          !current;
+
+        voiceEnabledRef.current =
+          next;
+
+        return next;
+      },
+    );
+  }
+
+  /*
+   * Don't render while closed.
    */
 
   if (!open) {
@@ -392,7 +802,6 @@ export default function RobotAssistant({
         border-cyan-400/25
 
         bg-[#05070D]/90
-
         backdrop-blur-2xl
 
         shadow-[0_0_80px_rgba(0,255,255,0.12)]
@@ -403,7 +812,6 @@ export default function RobotAssistant({
         duration-300
       "
     >
-
       {/* HEADER */}
 
       <div
@@ -419,9 +827,7 @@ export default function RobotAssistant({
           border-cyan-400/10
         "
       >
-
         <div>
-
           <div
             className="
               font-mono
@@ -443,11 +849,11 @@ export default function RobotAssistant({
           >
             {state === "thinking"
               ? "PROCESSING REQUEST"
-              : state === "speaking"
+              : state ===
+                "speaking"
               ? "VOICE OUTPUT ACTIVE"
               : "SYSTEM ONLINE"}
           </div>
-
         </div>
 
         <div
@@ -457,20 +863,11 @@ export default function RobotAssistant({
             gap-1
           "
         >
-
           {/* VOICE */}
 
           <button
             type="button"
-            onClick={() => {
-              if (state === "speaking") {
-                stopSpeaking();
-              }
-
-              setVoiceEnabled(
-                current => !current
-              );
-            }}
+            onClick={toggleVoice}
             className="
               p-2
               rounded-lg
@@ -488,9 +885,13 @@ export default function RobotAssistant({
             }
           >
             {voiceEnabled ? (
-              <Volume2 size={17} />
+              <Volume2
+                size={17}
+              />
             ) : (
-              <VolumeX size={17} />
+              <VolumeX
+                size={17}
+              />
             )}
           </button>
 
@@ -516,9 +917,7 @@ export default function RobotAssistant({
           >
             <X size={17} />
           </button>
-
         </div>
-
       </div>
 
       {/* ROBOT STATUS */}
@@ -530,7 +929,6 @@ export default function RobotAssistant({
           text-center
         "
       >
-
         <div
           className={`
             mx-auto
@@ -553,18 +951,18 @@ export default function RobotAssistant({
                   animate-pulse
                 `
                 : state === "speaking"
-                ? `
-                  bg-cyan-300
+                  ? `
+                    bg-cyan-300
 
-                  shadow-[0_0_35px_10px_rgba(34,211,238,.45)]
+                    shadow-[0_0_35px_10px_rgba(34,211,238,.45)]
 
-                  animate-pulse
-                `
-                : `
-                  bg-cyan-400
+                    animate-pulse
+                  `
+                  : `
+                    bg-cyan-400
 
-                  shadow-[0_0_20px_5px_rgba(34,211,238,.25)]
-                `
+                    shadow-[0_0_20px_5px_rgba(34,211,238,.25)]
+                  `
             }
           `}
         />
@@ -584,14 +982,15 @@ export default function RobotAssistant({
           {state === "thinking"
             ? "ANALYZING"
             : state === "speaking"
-            ? "SPEAKING"
-            : "READY"}
+              ? "SPEAKING"
+              : "READY"}
         </div>
 
         {/* RESPONSE */}
 
         {transcript && (
           <div
+            aria-live="polite"
             className="
               mt-5
               mx-auto
@@ -606,7 +1005,6 @@ export default function RobotAssistant({
             {transcript}
           </div>
         )}
-
       </div>
 
       {/* INPUT */}
@@ -620,7 +1018,6 @@ export default function RobotAssistant({
           p-4
         "
       >
-
         <div
           className="
             flex
@@ -638,29 +1035,23 @@ export default function RobotAssistant({
             py-2
           "
         >
-
           <input
             value={input}
-
-            onChange={event =>
+            onChange={(event) =>
               setInput(
-                event.target.value
+                event.target.value,
               )
             }
-
             disabled={
               state === "thinking" ||
               state === "speaking"
             }
-
             maxLength={1000}
-
             placeholder={
               state === "speaking"
                 ? "J.A.R.V.I.S. is speaking..."
                 : "Ask J.A.R.V.I.S. something..."
             }
-
             className="
               flex-1
               min-w-0
@@ -678,13 +1069,11 @@ export default function RobotAssistant({
 
           <button
             type="submit"
-
             disabled={
               !input.trim() ||
               state === "thinking" ||
               state === "speaking"
             }
-
             className="
               flex
               items-center
@@ -712,7 +1101,6 @@ export default function RobotAssistant({
           >
             <Send size={15} />
           </button>
-
         </div>
 
         <div
@@ -730,12 +1118,12 @@ export default function RobotAssistant({
           "
         >
           AI PORTFOLIO ASSISTANT
-          {" "}•{" "}
-          VOICE ENABLED
+          {" • "}
+          {voiceEnabled
+            ? "VOICE ENABLED"
+            : "VOICE MUTED"}
         </div>
-
       </form>
-
     </div>
   );
 }
