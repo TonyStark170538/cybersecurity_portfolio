@@ -1,5 +1,6 @@
 import {
   FormEvent,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -59,6 +60,38 @@ const MAX_CONVERSATION_MESSAGES = 8;
 
 const FALLBACK_AUDIO_TYPE = "audio/wav";
 
+/*
+ * ============================================================
+ * J.A.R.V.I.S. AMBIENT PRESENCE
+ * ============================================================
+ *
+ * Random interval:
+ *
+ * 45–75 seconds
+ *
+ * This is frequent enough to make J.A.R.V.I.S. feel present,
+ * but not so frequent that he becomes annoying.
+ */
+
+const AMBIENT_MIN_DELAY = 45_000;
+const AMBIENT_MAX_DELAY = 75_000;
+
+/*
+ * After the user sends a question, give them some quiet time.
+ *
+ * This prevents:
+ *
+ * User asks something
+ *       ↓
+ * J.A.R.V.I.S. answers
+ *       ↓
+ * 10 seconds later
+ * J.A.R.V.I.S. talks again
+ *
+ * Instead, we wait at least 60 seconds after interaction.
+ */
+const AMBIENT_INTERACTION_COOLDOWN = 60_000;
+
 export default function RobotAssistant({
   open,
   onClose,
@@ -80,121 +113,88 @@ export default function RobotAssistant({
     useState<ConversationMessage[]>([]);
 
   /*
-   * Current audio element.
+   * ==========================================================
+   * AUDIO
+   * ==========================================================
    */
+
   const audioRef =
     useRef<HTMLAudioElement | null>(null);
 
-  /*
-   * Object URL used by the current audio.
-   */
   const audioUrlRef =
     useRef<string | null>(null);
 
   /*
-   * Prevent stale async requests from
-   * changing the current robot state.
+   * ==========================================================
+   * REQUEST CONTROL
+   * ==========================================================
    */
+
   const requestIdRef = useRef(0);
 
-  /*
-   * Current network request.
-   */
   const abortControllerRef =
     useRef<AbortController | null>(null);
 
   /*
-   * Ref version of voiceEnabled so async
-   * functions always have the latest value.
+   * Always-current voice state.
    */
-  const voiceEnabledRef = useRef(true);
+  const voiceEnabledRef =
+    useRef(true);
 
   /*
-   * Browser audio permission / interaction state.
+   * ==========================================================
+   * AUDIO UNLOCK
+   * ==========================================================
    *
-   * We do not generate or play anything here.
-   * We simply remember that the user has
-   * interacted with the page.
+   * Browsers usually block autoplay until the user interacts
+   * with the page.
    */
-  const audioUnlockedRef = useRef(false);
+
+  const audioUnlockedRef =
+    useRef(false);
 
   /*
-   * Keep voiceEnabledRef synchronized.
+   * ==========================================================
+   * AMBIENT PRESENCE
+   * ==========================================================
    */
+
+  const ambientTimerRef =
+    useRef<ReturnType<typeof setTimeout> | null>(
+      null,
+    );
+
+  /*
+   * Prevent multiple ambient requests
+   * from being started at the same time.
+   */
+  const ambientRunningRef =
+    useRef(false);
+
+  /*
+   * Last time the user actively interacted
+   * with J.A.R.V.I.S.
+   */
+  const lastInteractionRef =
+    useRef(0);
+
+  /*
+   * ==========================================================
+   * KEEP VOICE REF SYNCHRONIZED
+   * ==========================================================
+   */
+
   useEffect(() => {
     voiceEnabledRef.current =
       voiceEnabled;
   }, [voiceEnabled]);
 
   /*
-   * Unlock audio after the user's first
-   * interaction with the website.
-   *
-   * This helps avoid browser autoplay
-   * restrictions when TTS arrives later
-   * from the network.
-   */
-  useEffect(() => {
-    const unlockAudio = () => {
-      audioUnlockedRef.current = true;
-    };
-
-    window.addEventListener(
-      "pointerdown",
-      unlockAudio,
-      { once: true },
-    );
-
-    window.addEventListener(
-      "keydown",
-      unlockAudio,
-      { once: true },
-    );
-
-    return () => {
-      window.removeEventListener(
-        "pointerdown",
-        unlockAudio,
-      );
-
-      window.removeEventListener(
-        "keydown",
-        unlockAudio,
-      );
-    };
-  }, []);
-
-  /*
-   * Cleanup when component unmounts.
-   */
-  useEffect(() => {
-    return () => {
-      requestIdRef.current += 1;
-
-      abortControllerRef.current?.abort();
-
-      cleanupAudio();
-    };
-  }, []);
-
-  /*
-   * Synchronize robot visual state.
-   */
-  useEffect(() => {
-    onSpeakingChange?.(
-      state === "speaking",
-    );
-
-    onStateChange?.(state);
-  }, [
-    state,
-    onSpeakingChange,
-    onStateChange,
-  ]);
-
-  /*
+   * ==========================================================
    * BASE64 → AUDIO BLOB
+   * ==========================================================
    */
+
   function base64ToBlob(
     base64: string,
     mimeType: string,
@@ -202,9 +202,10 @@ export default function RobotAssistant({
     const byteCharacters =
       atob(base64);
 
-    const byteNumbers = new Array(
-      byteCharacters.length,
-    );
+    const byteNumbers =
+      new Array(
+        byteCharacters.length,
+      );
 
     for (
       let i = 0;
@@ -216,7 +217,9 @@ export default function RobotAssistant({
     }
 
     const byteArray =
-      new Uint8Array(byteNumbers);
+      new Uint8Array(
+        byteNumbers,
+      );
 
     return new Blob(
       [byteArray],
@@ -229,8 +232,11 @@ export default function RobotAssistant({
   }
 
   /*
-   * CLEAN CURRENT AUDIO
+   * ==========================================================
+   * CLEAN AUDIO
+   * ==========================================================
    */
+
   function cleanupAudio() {
     if (audioRef.current) {
       audioRef.current.onended = null;
@@ -259,11 +265,11 @@ export default function RobotAssistant({
   }
 
   /*
+   * ==========================================================
    * PLAY J.A.R.V.I.S. VOICE
-   *
-   * Audio is generated by the backend.
-   * No MP3 files are required.
+   * ==========================================================
    */
+
   async function speak(
     audioBase64: string,
     audioType: string,
@@ -287,6 +293,9 @@ export default function RobotAssistant({
     }
 
     try {
+      /*
+       * Always stop previous audio first.
+       */
       cleanupAudio();
 
       const blob =
@@ -311,8 +320,7 @@ export default function RobotAssistant({
         audio;
 
       /*
-       * Make sure this request is
-       * still the active request.
+       * Make sure this request is still valid.
        */
       if (
         requestId !==
@@ -322,10 +330,6 @@ export default function RobotAssistant({
         return;
       }
 
-      /*
-       * Tell the robot model that
-       * speech has started.
-       */
       setState("speaking");
 
       audio.onended = () => {
@@ -354,15 +358,8 @@ export default function RobotAssistant({
         }
       };
 
-      /*
-       * Try to start playback.
-       */
       await audio.play();
 
-      /*
-       * If playback starts successfully,
-       * J.A.R.V.I.S. is officially speaking.
-       */
       if (
         requestId ===
         requestIdRef.current
@@ -387,8 +384,11 @@ export default function RobotAssistant({
   }
 
   /*
+   * ==========================================================
    * STOP SPEAKING
+   * ==========================================================
    */
+
   function stopSpeaking() {
     cleanupAudio();
 
@@ -396,21 +396,25 @@ export default function RobotAssistant({
   }
 
   /*
-   * PARSE ONE SSE EVENT
+   * ==========================================================
+   * PARSE SSE EVENT
+   * ==========================================================
    */
+
   function parseStreamEvent(
     rawEvent: string,
   ): StreamEvent | null {
     const lines =
       rawEvent.split("\n");
 
-    const dataLines = lines
-      .filter((line) =>
-        line.startsWith("data:"),
-      )
-      .map((line) =>
-        line.slice(5).trim(),
-      );
+    const dataLines =
+      lines
+        .filter((line) =>
+          line.startsWith("data:"),
+        )
+        .map((line) =>
+          line.slice(5).trim(),
+        );
 
     if (dataLines.length === 0) {
       return null;
@@ -434,8 +438,389 @@ export default function RobotAssistant({
   }
 
   /*
-   * SEND QUESTION
+   * ==========================================================
+   * SCHEDULE AMBIENT REACTION
+   * ==========================================================
+   *
+   * Uses a random delay so J.A.R.V.I.S. doesn't feel like
+   * a predictable timer.
    */
+
+  const scheduleAmbientReaction =
+    useCallback(() => {
+      /*
+       * Remove existing timer.
+       */
+      if (
+        ambientTimerRef.current
+      ) {
+        clearTimeout(
+          ambientTimerRef.current,
+        );
+
+        ambientTimerRef.current =
+          null;
+      }
+
+      /*
+       * Don't schedule when assistant is closed.
+       */
+      if (!open) {
+        return;
+      }
+
+      /*
+       * Don't schedule when voice is muted.
+       */
+      if (!voiceEnabledRef.current) {
+        return;
+      }
+
+      /*
+       * Don't schedule until browser audio has
+       * been unlocked by user interaction.
+       */
+      if (!audioUnlockedRef.current) {
+        return;
+      }
+
+      const randomDelay =
+        AMBIENT_MIN_DELAY +
+        Math.random() *
+          (AMBIENT_MAX_DELAY -
+            AMBIENT_MIN_DELAY);
+
+      ambientTimerRef.current =
+        setTimeout(() => {
+          void speakAmbientReaction();
+        }, randomDelay);
+    }, [open]);
+
+  /*
+   * ==========================================================
+   * AMBIENT REACTION
+   * ==========================================================
+   */
+
+  async function speakAmbientReaction() {
+    /*
+     * Don't do anything if assistant is closed.
+     */
+    if (!open) {
+      return;
+    }
+
+    /*
+     * Voice disabled.
+     */
+    if (!voiceEnabledRef.current) {
+      return;
+    }
+
+    /*
+     * Prevent duplicate ambient requests.
+     */
+    if (ambientRunningRef.current) {
+      scheduleAmbientReaction();
+      return;
+    }
+
+    /*
+     * Never interrupt an active conversation.
+     */
+    if (
+      state === "thinking" ||
+      state === "speaking"
+    ) {
+      scheduleAmbientReaction();
+      return;
+    }
+
+    /*
+     * Don't speak immediately after user interaction.
+     */
+    const timeSinceInteraction =
+      Date.now() -
+      lastInteractionRef.current;
+
+    if (
+      timeSinceInteraction <
+      AMBIENT_INTERACTION_COOLDOWN
+    ) {
+      const remaining =
+        AMBIENT_INTERACTION_COOLDOWN -
+        timeSinceInteraction;
+
+      /*
+       * Wait until cooldown expires, then add
+       * a small random amount.
+       */
+      ambientTimerRef.current =
+        setTimeout(
+          () => {
+            void speakAmbientReaction();
+          },
+          remaining +
+            Math.random() * 15_000,
+        );
+
+      return;
+    }
+
+    /*
+     * Browser audio isn't unlocked yet.
+     */
+    if (!audioUnlockedRef.current) {
+      scheduleAmbientReaction();
+      return;
+    }
+
+    ambientRunningRef.current =
+      true;
+
+    try {
+      const response =
+        await fetch(
+          "/api/robot-reaction",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify({
+              context: "general",
+            }),
+          },
+        );
+
+      if (!response.ok) {
+        throw new Error(
+          "Ambient reaction request failed.",
+        );
+      }
+
+      const data =
+        (await response.json()) as {
+          audio?: string;
+          audioType?: string;
+          text?: string;
+        };
+
+      /*
+       * User may have started interacting while
+       * the backend was generating speech.
+       */
+      if (
+        state === "thinking" ||
+        state === "speaking" ||
+        !voiceEnabledRef.current
+      ) {
+        return;
+      }
+
+      if (!data.audio) {
+        console.warn(
+          "J.A.R.V.I.S. ambient reaction contained no audio.",
+        );
+
+        return;
+      }
+
+      /*
+       * Use the current request identity.
+       *
+       * Ambient speech does NOT invalidate a normal
+       * assistant request.
+       */
+      const requestId =
+        requestIdRef.current;
+
+      await speak(
+        data.audio,
+        data.audioType ||
+          FALLBACK_AUDIO_TYPE,
+        requestId,
+      );
+    } catch (error) {
+      console.warn(
+        "J.A.R.V.I.S. ambient reaction failed:",
+        error,
+      );
+    } finally {
+      ambientRunningRef.current =
+        false;
+
+      /*
+       * Always schedule another ambient check.
+       */
+      scheduleAmbientReaction();
+    }
+  }
+
+  /*
+   * ==========================================================
+   * AUDIO UNLOCK + INITIAL AMBIENT PRESENCE
+   * ==========================================================
+   */
+
+  useEffect(() => {
+    const unlockAudio = () => {
+      audioUnlockedRef.current =
+        true;
+
+      /*
+       * Record this as user activity.
+       */
+      lastInteractionRef.current =
+        Date.now();
+
+      /*
+       * We intentionally DON'T speak immediately.
+       *
+       * Instead, J.A.R.V.I.S. waits a random
+       * 45–75 seconds.
+       */
+      if (open) {
+        scheduleAmbientReaction();
+      }
+    };
+
+    window.addEventListener(
+      "pointerdown",
+      unlockAudio,
+      { once: true },
+    );
+
+    window.addEventListener(
+      "keydown",
+      unlockAudio,
+      { once: true },
+    );
+
+    return () => {
+      window.removeEventListener(
+        "pointerdown",
+        unlockAudio,
+      );
+
+      window.removeEventListener(
+        "keydown",
+        unlockAudio,
+      );
+    };
+  }, [
+    open,
+    scheduleAmbientReaction,
+  ]);
+
+  /*
+   * ==========================================================
+   * HANDLE OPEN/CLOSE
+   * ==========================================================
+   *
+   * When the assistant opens, start the ambient timer.
+   *
+   * When it closes, completely remove it.
+   */
+
+  useEffect(() => {
+    if (!open) {
+      if (
+        ambientTimerRef.current
+      ) {
+        clearTimeout(
+          ambientTimerRef.current,
+        );
+
+        ambientTimerRef.current =
+          null;
+      }
+
+      return;
+    }
+
+    /*
+     * If the browser is already unlocked,
+     * schedule ambient presence.
+     */
+    if (
+      audioUnlockedRef.current &&
+      voiceEnabledRef.current
+    ) {
+      scheduleAmbientReaction();
+    }
+
+    return () => {
+      if (
+        ambientTimerRef.current
+      ) {
+        clearTimeout(
+          ambientTimerRef.current,
+        );
+
+        ambientTimerRef.current =
+          null;
+      }
+    };
+  }, [
+    open,
+    scheduleAmbientReaction,
+  ]);
+
+  /*
+   * ==========================================================
+   * CLEANUP ON UNMOUNT
+   * ==========================================================
+   */
+
+  useEffect(() => {
+    return () => {
+      requestIdRef.current += 1;
+
+      abortControllerRef.current?.abort();
+
+      if (
+        ambientTimerRef.current
+      ) {
+        clearTimeout(
+          ambientTimerRef.current,
+        );
+
+        ambientTimerRef.current =
+          null;
+      }
+
+      cleanupAudio();
+    };
+  }, []);
+
+  /*
+   * ==========================================================
+   * SYNCHRONIZE ROBOT VISUAL STATE
+   * ==========================================================
+   */
+
+  useEffect(() => {
+    onSpeakingChange?.(
+      state === "speaking",
+    );
+
+    onStateChange?.(state);
+  }, [
+    state,
+    onSpeakingChange,
+    onStateChange,
+  ]);
+
+  /*
+   * ==========================================================
+   * SEND QUESTION
+   * ==========================================================
+   */
+
   async function sendMessage(
     event: FormEvent,
   ) {
@@ -453,7 +838,14 @@ export default function RobotAssistant({
     }
 
     /*
-     * Cancel previous request.
+     * IMPORTANT:
+     * User interaction resets ambient timing.
+     */
+    lastInteractionRef.current =
+      Date.now();
+
+    /*
+     * Cancel any existing request.
      */
     abortControllerRef.current?.abort();
 
@@ -464,7 +856,7 @@ export default function RobotAssistant({
       controller;
 
     /*
-     * Create a new request identity.
+     * Create new request identity.
      */
     const requestId =
       requestIdRef.current + 1;
@@ -473,16 +865,26 @@ export default function RobotAssistant({
       requestId;
 
     /*
-     * Update UI immediately.
+     * Stop any ambient timer.
+     *
+     * We don't want an ambient reaction
+     * firing while the user is asking something.
      */
+    if (
+      ambientTimerRef.current
+    ) {
+      clearTimeout(
+        ambientTimerRef.current,
+      );
+
+      ambientTimerRef.current =
+        null;
+    }
+
     setInput("");
     setTranscript("");
     setState("thinking");
 
-    /*
-     * Keep the existing conversation
-     * context for the AI.
-     */
     const history =
       conversation.slice(
         -MAX_CONVERSATION_MESSAGES,
@@ -552,7 +954,7 @@ export default function RobotAssistant({
               errorData.error;
           }
         } catch {
-          // Keep fallback message.
+          // Keep fallback.
         }
 
         throw new Error(
@@ -578,8 +980,11 @@ export default function RobotAssistant({
       let buffer = "";
 
       /*
+       * ========================================================
        * READ SSE STREAM
+       * ========================================================
        */
+
       while (true) {
         const {
           value,
@@ -612,10 +1017,6 @@ export default function RobotAssistant({
             },
           );
 
-        /*
-         * SSE events are separated
-         * by a blank line.
-         */
         const events =
           buffer.split(
             "\n\n",
@@ -661,7 +1062,7 @@ export default function RobotAssistant({
             }
 
             /*
-             * COMPLETE AI ANSWER
+             * COMPLETE ANSWER
              */
             case "done": {
               const finalAnswer =
@@ -678,11 +1079,6 @@ export default function RobotAssistant({
                 responseCompleted =
                   true;
 
-                /*
-                 * Store this conversation
-                 * only for the current
-                 * assistant session.
-                 */
                 setConversation(
                   (previous) => {
                     const next = [
@@ -717,10 +1113,6 @@ export default function RobotAssistant({
              * TTS AUDIO
              */
             case "audio": {
-              /*
-               * We only speak after the
-               * complete answer exists.
-               */
               if (
                 !responseCompleted
               ) {
@@ -734,9 +1126,6 @@ export default function RobotAssistant({
                 return;
               }
 
-              /*
-               * Voice disabled.
-               */
               if (
                 !voiceEnabledRef.current
               ) {
@@ -744,9 +1133,6 @@ export default function RobotAssistant({
                 break;
               }
 
-              /*
-               * Actual audio received.
-               */
               if (
                 streamEvent.audio
               ) {
@@ -760,10 +1146,6 @@ export default function RobotAssistant({
                   requestId,
                 );
               } else {
-                /*
-                 * Text worked but TTS
-                 * was unavailable.
-                 */
                 console.warn(
                   "J.A.R.V.I.S. received no TTS audio.",
                 );
@@ -778,10 +1160,6 @@ export default function RobotAssistant({
              * STREAM COMPLETE
              */
             case "complete": {
-              /*
-               * If no audio arrived,
-               * return to ready state.
-               */
               if (
                 requestId ===
                   requestIdRef.current &&
@@ -807,7 +1185,7 @@ export default function RobotAssistant({
       }
 
       /*
-       * Handle a final buffered SSE event.
+       * Handle final buffered event.
        */
       if (buffer.trim()) {
         const streamEvent =
@@ -871,17 +1249,30 @@ export default function RobotAssistant({
       ) {
         abortControllerRef.current =
           null;
+
+        /*
+         * User just finished interacting.
+         *
+         * Give them another quiet 60+ seconds
+         * before ambient presence returns.
+         */
+        lastInteractionRef.current =
+          Date.now();
+
+        scheduleAmbientReaction();
       }
     }
   }
 
   /*
+   * ==========================================================
    * CLOSE ASSISTANT
+   * ==========================================================
    */
+
   function closeAssistant() {
     /*
-     * Immediately invalidate all
-     * outstanding async callbacks.
+     * Invalidate async callbacks.
      */
     requestIdRef.current += 1;
 
@@ -894,12 +1285,29 @@ export default function RobotAssistant({
       null;
 
     /*
-     * Stop speech immediately.
+     * Stop ambient timer.
+     */
+    if (
+      ambientTimerRef.current
+    ) {
+      clearTimeout(
+        ambientTimerRef.current,
+      );
+
+      ambientTimerRef.current =
+        null;
+    }
+
+    /*
+     * Stop speech.
      */
     cleanupAudio();
 
+    ambientRunningRef.current =
+      false;
+
     /*
-     * Clear temporary conversation.
+     * Clear conversation.
      */
     setConversation([]);
 
@@ -911,12 +1319,14 @@ export default function RobotAssistant({
   }
 
   /*
+   * ==========================================================
    * TOGGLE VOICE
+   * ==========================================================
    */
+
   function toggleVoice() {
     /*
-     * If currently speaking,
-     * stop immediately.
+     * Stop current speech immediately.
      */
     if (state === "speaking") {
       stopSpeaking();
@@ -929,12 +1339,34 @@ export default function RobotAssistant({
         voiceEnabledRef.current =
           next;
 
-        /*
-         * If voice is being disabled,
-         * make sure audio is stopped.
-         */
         if (!next) {
+          /*
+           * Voice disabled:
+           * stop audio + ambient timer.
+           */
           cleanupAudio();
+
+          if (
+            ambientTimerRef.current
+          ) {
+            clearTimeout(
+              ambientTimerRef.current,
+            );
+
+            ambientTimerRef.current =
+              null;
+          }
+
+          setState("ready");
+        } else if (open) {
+          /*
+           * Voice enabled again:
+           * restart ambient timer.
+           */
+          lastInteractionRef.current =
+            Date.now();
+
+          scheduleAmbientReaction();
         }
 
         return next;
@@ -943,11 +1375,20 @@ export default function RobotAssistant({
   }
 
   /*
-   * Don't render while closed.
+   * ==========================================================
+   * CLOSED
+   * ==========================================================
    */
+
   if (!open) {
     return null;
   }
+
+  /*
+   * ==========================================================
+   * UI
+   * ==========================================================
+   */
 
   return (
     <div

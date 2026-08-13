@@ -86,14 +86,22 @@ const reactions: Record<ReactionContext, string[]> = {
   ],
 
   general: [
-    "Everything is under control. Probably.",
-    "I would make a cybersecurity joke, but someone might patch it.",
-    "I've analyzed the situation. Coffee would improve it.",
-    "System functioning normally. Suspiciously normally.",
-    "I checked everything twice. You're welcome.",
-    "No critical vulnerabilities detected. At least not yet.",
-    "I am currently pretending this was all part of the plan.",
-  ],
+  "Everything is under control. Probably.",
+  "I would make a cybersecurity joke, but someone might patch it.",
+  "I've analyzed the situation. Coffee would improve it.",
+  "System functioning normally. Suspiciously normally.",
+  "I checked everything twice. You're welcome.",
+  "No critical vulnerabilities detected. At least not yet.",
+  "I am currently pretending this was all part of the plan.",
+
+  "Still here if you need me.",
+  "Take your time. I'll keep an eye on things.",
+  "Everything appears to be running smoothly.",
+  "You can explore. I'll monitor the system.",
+  "All systems are operating normally.",
+  "Interesting. I was wondering what you'd click next.",
+  "No suspicious activity detected. For now.",
+],
 };
 
 const projectSpecific: Record<string, string[]> = {
