@@ -478,3 +478,224 @@ Error handling
 SSE-based client streaming
 
 The result is a portfolio interaction that behaves more like an AI product interface than a traditional static chatbot.
+What I used
+
+I implemented my own SSE consumer.
+
+The client directly reads:
+
+response.body.getReader()
+
+and processes the SSE events.
+
+Why
+
+This project already had a custom API response format containing:
+
+chunk
+done
+audio
+complete
+error
+
+A custom consumer allowed the frontend to coordinate:
+
+streaming text
+AI state
+TTS
+audio playback
+request cancellation
+robot animation state
+
+without introducing another abstraction layer.
+
+This also demonstrates understanding of the streaming protocol itself.
+
+3. Stop Button
+Assignment requirement
+
+The assignment asks for a working stop button.
+
+Implementation
+
+The underlying stop/cancellation mechanism is implemented with:
+
+AbortController
+
+and request IDs.
+
+This allows an active request to be invalidated safely.
+
+Voice playback can also be stopped immediately.
+
+UI decision
+
+The current interface prioritizes the voice control and conversation flow rather than adding a large dedicated "Stop" button.
+
+The cancellation logic exists at the request/state level so the system does not depend on a visual button to remain consistent.
+
+4. Conversation Persistence
+Assignment stretch goal
+
+The assignment suggests persisting conversations using:
+
+localStorage
+or a database.
+What I used
+
+Conversation history currently survives multiple turns during the active assistant session, but it is not persisted after closing or refreshing the page.
+
+Why
+
+The assistant is primarily a portfolio demonstration rather than a personal productivity chatbot.
+
+Persistent conversations would require additional product decisions around:
+
+storage
+privacy
+session identity
+data retention
+clearing conversations
+database infrastructure
+
+Those features were outside the core goal of demonstrating streaming AI interaction.
+
+The current implementation intentionally keeps the conversation temporary.
+
+5. Streaming Markdown Renderer
+Assignment mentor tip
+
+The brief warns against rendering incomplete Markdown naively while tokens are streaming.
+
+What I used
+
+The streamed response is currently displayed as plain text.
+
+Why
+
+The portfolio assistant is designed for short conversational answers rather than long Markdown documents.
+
+Rendering plain text avoids problems such as:
+
+incomplete code fences
+broken formatting
+unfinished links
+dangling Markdown syntax
+
+This makes the streaming output visually stable while tokens arrive.
+
+A Markdown renderer could be added later if the assistant begins returning longer formatted technical responses.
+
+6. Auto-scroll / Jump to Latest
+Assignment mentor tip
+
+The brief recommends:
+
+keeping the view pinned while the user is at the bottom
+releasing the pin when the user scrolls upward
+providing a "jump to latest" control.
+What I used
+
+The current assistant presents the active response inside a compact fixed panel rather than a long scrolling chat transcript.
+
+Because the interface is intentionally compact and the transcript is not rendered as a large independent message history, the full chat-window auto-scroll pattern was not necessary for the current design.
+
+The assistant still streams text progressively.
+
+If the conversation UI is expanded into a full-height message history, auto-scroll and "jump to latest" should be added.
+
+7. Ambient AI Presence
+Additional feature
+
+I implemented an optional ambient interaction layer.
+
+J.A.R.V.I.S. occasionally produces a short voice reaction after the visitor has interacted with the website.
+
+The delay is randomized between approximately:
+
+60–90 seconds
+Why
+
+The goal was to make the robot feel like an active system rather than a static widget.
+
+However, the feature is deliberately conservative.
+
+Ambient reactions:
+
+do not start before user interaction
+do not interrupt active requests
+do not interrupt speech
+respect the voice toggle
+use randomized timing
+
+This keeps the feature atmospheric rather than distracting.
+
+8. Audio Files
+What I used
+
+The main AI responses do not depend on manually recorded MP3 files.
+
+Speech is generated dynamically through Groq Orpheus TTS.
+
+The server returns Base64-encoded WAV data to the client.
+
+Why
+
+This keeps the assistant flexible.
+
+The same system can speak different AI-generated responses without requiring a separate audio file for every possible answer.
+
+9. API Key
+
+The API key is never placed in the React client.
+
+The browser communicates with the project's server route.
+
+The server reads:
+
+process.env.GROQ_API_KEY
+
+This is intentional because exposing the API key in client-side JavaScript would allow anyone visiting the portfolio to extract and reuse it.
+
+10. Scope Decision
+
+The core FE-06 requirement was to demonstrate a usable streaming AI interaction.
+
+The implementation therefore prioritizes:
+
+Visible streaming
+Multi-turn conversation
+Correct request lifecycle
+Safe cancellation
+Server-side credentials
+Mobile-friendly UI
+AI voice output
+Integration with the 3D portfolio robot
+
+Optional infrastructure such as persistent storage and a full production-grade chat history UI was intentionally kept outside the core scope.
+
+Final Technical Position
+
+The implementation is not a copy of the reference Vercel AI chatbot.
+
+It is a custom implementation designed around the existing portfolio architecture.
+
+The important FE-06 concepts are still present:
+
+AI request
+    ↓
+Server-side model call
+    ↓
+SSE stream
+    ↓
+Client stream reader
+    ↓
+Incremental UI updates
+    ↓
+Conversation state
+    ↓
+Audio generation
+    ↓
+Interactive robot state
+
+This approach keeps the feature aligned with the existing application instead of introducing unnecessary infrastructure solely to match the reference implementation.
