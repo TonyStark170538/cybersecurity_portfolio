@@ -230,7 +230,7 @@ export default function Header() {
                   transition
                 "
               >
-                &lt;devsec/&gt;
+                &lt;DevSecOps/&gt;
               </span>
             </span>
           </Link>

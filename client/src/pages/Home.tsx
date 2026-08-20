@@ -23,6 +23,9 @@ import {
 } from "react";
 import RobotAssistant from "@/components/robot/RobotAssistant";
 import type { RobotVisualState } from "@/components/robot/RobotModel";
+import back from "@/images/back.png";
+import back1 from "@/images/back1.png";
+
 
 export default function Home() {
 const [aiMode, setAiMode] = useState(false);
@@ -376,6 +379,27 @@ lg:pt-32
 lg:pb-32
 ">
 
+{/* HERO BACKGROUND OBJECT */}
+
+<img
+  src={back}
+  alt=""
+  aria-hidden="true"
+  className="
+    pointer-events-none
+    absolute
+    left-1/2
+    top-1/2
+    -z-10
+    w-[1200px]
+    max-w-none
+    -translate-x-1/2
+    -translate-y-1/2
+    opacity-45
+    object-contain
+    select-none
+  "
+/>
 
 <div className="
 absolute
@@ -475,7 +499,7 @@ text-[#D6A544]
 
 <p className="
 text-lg
-text-muted-foreground
+text-[#D6DCEF]
 max-w-xl
 leading-relaxed
 ">
@@ -490,7 +514,8 @@ cybersecurity, cloud infrastructure, and AI-powered applications.
 
 I build projects that combine secure architecture,
 clean user experiences, and engineering practices inspired
-by real-world security teams. Wanna know more? Click on the Robot.
+by real-world security teams. <span className="
+text-[#D6A544]">Wanna know more? Click on the Robot.</span>
 
 
 </p>
@@ -1373,7 +1398,6 @@ py-24
 <div className="container">
 
 
-
 <p className="
 text-accent
 
@@ -1562,6 +1586,7 @@ transition
 <section className="
 py-24
 ">
+
 
 
 <div className="container">
