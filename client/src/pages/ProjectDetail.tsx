@@ -1910,7 +1910,7 @@ color:theme.accent
 
 <span className="font-mono text-sm">
 
-Project Completed
+Project In Progress
 
 </span>
 
@@ -1921,16 +1921,16 @@ Project Completed
 
 <h2 className="text-4xl font-bold mt-8">
 
-Building better systems through engineering
-
+Building the next generation of security systems
 </h2>
 
 
 
 <p className="mt-4 text-muted-foreground">
 
-Secure architecture, thoughtful design,
-and continuous improvement.
+The platform is actively evolving through new security
+modules, integrations, and threat intelligence capabilities.
+
 
 </p>
 
